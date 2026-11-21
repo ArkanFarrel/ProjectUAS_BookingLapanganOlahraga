@@ -1,4 +1,4 @@
-# SportsCourt — Decision Log
+﻿# SportsCourt — Decision Log
 
 Dokumen ini mencatat keputusan produk dan teknis yang sudah disetujui. Setiap perubahan keputusan wajib dicatat di sini.
 
@@ -39,7 +39,7 @@ Keputusan berikut muncul saat menyusun ERD/API dan belum diatur eksplisit oleh P
 | P-09 | Fasilitas venue | Kolom JSON `facilities` berisi array key dari allowlist di config (contoh: `parking`, `toilet`, `shower`, `canteen`, `musholla`, `wifi`, `locker`). | Tidak perlu tabel tambahan; tervalidasi server-side. |
 | P-10 | Role | Kolom enum `users.role` (`customer`, `owner`, `admin`) + Laravel Policies. Tanpa package permission tambahan. Akun admin dibuat via artisan command interaktif (`php artisan app:create-admin`), bukan hardcoded di seeder. | Tiga role statis tidak membutuhkan dependency RBAC. |
 | P-11 | Alasan reject/cancel | Reject booking oleh owner: alasan opsional. Cancel oleh owner: alasan wajib. Cancel oleh customer: alasan opsional. Reject venue oleh admin: alasan wajib. | Sesuai D-04 dan FR-005. |
+| P-12 | Database lokal | XAMPP modern menggunakan **MariaDB** (bukan MySQL murni). Laravel memakai driver `mariadb`/`mysql` sesuai hasil pengecekan versi di Phase 2. Engine InnoDB. | Perilaku locking InnoDB setara untuk kebutuhan `SELECT ... FOR UPDATE`, tetapi versi harus diverifikasi. |
 | P-13 | Admin & data operasional | Admin **tidak** mengedit venue/court/harga/jadwal owner; admin hanya approve/reject/suspend/reactivate venue. (PRD menulis admin "Ya" untuk manage venue/court.) | Menghindari dua pihak mengedit data operasional yang sama; mengurangi permukaan otorisasi. |
 | P-14 | Venue suspended & booking aktif | Booking mendatang pada venue yang di-suspend **tidak** otomatis dibatalkan; venue hanya disembunyikan dan tidak menerima booking baru. | Menghindari pembatalan massal tanpa notifikasi (notifikasi di luar scope MVP). |
 | P-15 | Endpoint court | `POST /owner/courts` diubah menjadi `POST /owner/venues/{venue}/courts`. | Ownership venue tervalidasi dari route, bukan dari `venue_id` di body (mencegah BOLA). |
-| P-12 | Database lokal | XAMPP modern menggunakan **MariaDB** (bukan MySQL murni). Laravel memakai driver `mariadb`/`mysql` sesuai hasil pengecekan versi di Phase 2. Engine InnoDB. | Perilaku locking InnoDB setara untuk kebutuhan `SELECT ... FOR UPDATE`, tetapi versi harus diverifikasi. |
