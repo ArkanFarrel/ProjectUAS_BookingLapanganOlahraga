@@ -22,11 +22,11 @@ Tanggal: 2026-11-21
 
 ---
 
-## B. Keputusan Turunan (PROPOSED — menunggu review user)
+## B. Keputusan Turunan (FINAL — disetujui user pada 2026-11-21)
 
-Keputusan berikut muncul saat menyusun ERD/API dan belum diatur eksplisit oleh PRD. Mohon dikonfirmasi atau dikoreksi.
+Keputusan berikut melengkapi detail teknis yang belum diatur eksplisit oleh PRD dan telah disetujui untuk implementasi.
 
-| ID | Topik | Usulan | Alasan |
+| ID | Topik | Keputusan | Alasan |
 |----|-------|--------|--------|
 | P-01 | Timezone | Database menyimpan `DATETIME` dalam **UTC** (`APP_TIMEZONE=UTC`). Setiap venue punya kolom `timezone` (`Asia/Jakarta`, `Asia/Makassar`, `Asia/Jayapura`), default `Asia/Jakarta`. Jam operasional dan tampilan slot memakai waktu lokal venue. | Indonesia punya 3 zona waktu (BR-013). Menyimpan UTC menghindari bug "booking masa lalu" lintas zona. |
 | P-02 | Jam operasional | Jam bulat (`open_hour` 0–23, `close_hour` 1–24), `close_hour > open_hour`. Tidak mendukung operasional melewati tengah malam (misal 20:00–02:00) di MVP. | Konsisten dengan slot 1 jam (D-02) dan menyederhanakan perhitungan availability. |
@@ -39,7 +39,7 @@ Keputusan berikut muncul saat menyusun ERD/API dan belum diatur eksplisit oleh P
 | P-09 | Fasilitas venue | Kolom JSON `facilities` berisi array key dari allowlist di config (contoh: `parking`, `toilet`, `shower`, `canteen`, `musholla`, `wifi`, `locker`). | Tidak perlu tabel tambahan; tervalidasi server-side. |
 | P-10 | Role | Kolom enum `users.role` (`customer`, `owner`, `admin`) + Laravel Policies. Tanpa package permission tambahan. Akun admin dibuat via artisan command interaktif (`php artisan app:create-admin`), bukan hardcoded di seeder. | Tiga role statis tidak membutuhkan dependency RBAC. |
 | P-11 | Alasan reject/cancel | Reject booking oleh owner: alasan opsional. Cancel oleh owner: alasan wajib. Cancel oleh customer: alasan opsional. Reject venue oleh admin: alasan wajib. | Sesuai D-04 dan FR-005. |
-| P-12 | Database lokal | XAMPP modern menggunakan **MariaDB** (bukan MySQL murni). Laravel memakai driver `mariadb`/`mysql` sesuai hasil pengecekan versi di Phase 2. Engine InnoDB. | Perilaku locking InnoDB setara untuk kebutuhan `SELECT ... FOR UPDATE`, tetapi versi harus diverifikasi. |
+| P-12 | Database lokal | XAMPP menggunakan **10.4.32-MariaDB** (`InnoDB`). Laravel memakai driver `mariadb` dengan `'engine' => 'InnoDB'`. Runtime PHP 8.5.0 (Herd Lite) memiliki `pdo_mysql`, `fileinfo`, `mbstring`, `openssl`, `bcmath` (ekstensi `gd` dan `intl` tidak aktif: validasi `dimensions` Laravel memakai `getimagesize()` native PHP tanpa `gd`, hindari library manipulasi gambar berbasis `gd` kecuali `gd` diaktifkan). | Terverifikasi di Phase 2; perilaku locking InnoDB setara untuk `SELECT ... FOR UPDATE`. |
 | P-13 | Admin & data operasional | Admin **tidak** mengedit venue/court/harga/jadwal owner; admin hanya approve/reject/suspend/reactivate venue. (PRD menulis admin "Ya" untuk manage venue/court.) | Menghindari dua pihak mengedit data operasional yang sama; mengurangi permukaan otorisasi. |
 | P-14 | Venue suspended & booking aktif | Booking mendatang pada venue yang di-suspend **tidak** otomatis dibatalkan; venue hanya disembunyikan dan tidak menerima booking baru. | Menghindari pembatalan massal tanpa notifikasi (notifikasi di luar scope MVP). |
 | P-15 | Endpoint court | `POST /owner/courts` diubah menjadi `POST /owner/venues/{venue}/courts`. | Ownership venue tervalidasi dari route, bukan dari `venue_id` di body (mencegah BOLA). |

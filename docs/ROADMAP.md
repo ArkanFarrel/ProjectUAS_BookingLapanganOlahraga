@@ -1,6 +1,6 @@
-# SportsCourt — Implementation Roadmap (Draft v1)
+# SportsCourt — Implementation Roadmap
 
-Status: **Menunggu persetujuan** — implementasi dimulai setelah ERD, Architecture, API, dan keputusan P-01…P-15 di [DECISIONS.md](./DECISIONS.md) direview.
+Status: **Phase 2 selesai** — Phase 3 siap dimulai setelah konfirmasi.
 
 ```mermaid
 flowchart LR
@@ -9,8 +9,8 @@ flowchart LR
 
 | Phase | Deliverable | Exit criteria (harus benar-benar dijalankan) |
 |-------|-------------|-----------------------------------------------|
-| **1. Requirement & Planning** ✅ draft | `DECISIONS.md`, `ERD.md`, `ARCHITECTURE.md`, `API.md`, `ROADMAP.md` | User menyetujui dokumen & keputusan P-xx |
-| **2. Project Initialization** | Cek versi PHP/Composer/Node/npm/MariaDB; `backend/` Laravel; `frontend/` Vite React TS + Tailwind; git init; `.gitignore`, `.env.example`, `README.md`, `AGENTS.md`; DB `sportscourt` & `sportscourt_test` | `php artisan migrate` (tabel bawaan) sukses; `npm run build` & `npm run lint` sukses; kedua server jalan terpisah |
+| **1. Requirement & Planning** ✅ | `DECISIONS.md`, `ERD.md`, `ARCHITECTURE.md`, `API.md`, `ROADMAP.md` | Disetujui user (D-01–D-08 & P-01–P-15 final) |
+| **2. Project Initialization** ✅ | Cek versi PHP/Composer/Node/npm/MariaDB; `backend/` Laravel; `frontend/` Vite React TS + Tailwind; `.env.example`, `README.md`, `AGENTS.md`; DB `sportscourt` & `sportscourt_test` | `php artisan migrate:fresh` (tabel bawaan) & `php artisan test` sukses; `npm run typecheck`, `npm run lint`, `npm run build` sukses; kedua server diuji berjalan terpisah (catatan: root `.gitignore` dilewati karena permission denied, coverage ditangani `backend/.gitignore` & `frontend/.gitignore`) |
 | **3. Auth & Authorization** | Migration `users` (role, status); Sanctum SPA, CORS, CSRF; register/login/logout/me/profile/password; `EnsureRole`, cek suspended; `app:create-admin`; halaman login/register + guard UX | Feature test auth, role, throttle, suspended; login–logout end-to-end dari browser tanpa 401/419 |
 | **4. Venue & Court Management** | Migration `sports`, `venues`, `venue_images`, `operating_hours`, `courts`; seeder sports; owner CRUD; admin verification; upload aman; halaman owner & admin terkait | Test ownership/IDOR (owner A vs B), transisi status venue, validasi upload |
 | **5. Discovery & Availability** | Listing/search/filter/pagination; detail venue; operating hours UI; `court_blocks`; `AvailabilityService` + endpoint; halaman explore & detail | Unit test availability (jam tutup, blok, booking, past, timezone WITA/WIT); tidak ada N+1 (cek query log) |
