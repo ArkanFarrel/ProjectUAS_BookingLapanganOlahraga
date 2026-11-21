@@ -51,7 +51,7 @@ export function RegisterPage() {
 
   return (
     <AuthLayout
-      panelTitle="Dua jenis akun, satu cara masuk."
+      panelTitle="Pelanggan atau pemilik, satu pintu masuk."
       panelText="Pilih pelanggan jika Anda ingin memesan lapangan. Pilih pemilik venue jika Anda ingin mendaftarkan lapangan. Venue baru tetap menunggu persetujuan admin."
     >
       <form className="space-y-5" onSubmit={(event) => void handleSubmit(onSubmit)(event)} noValidate>

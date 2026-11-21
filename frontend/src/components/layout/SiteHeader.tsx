@@ -3,7 +3,7 @@ import { homePathForRole } from '@/features/auth/paths'
 import { cn } from '@/lib/cn'
 import { Link, useNavigate } from 'react-router-dom'
 
-const linkClass = 'rounded-md px-3 py-2 text-sm font-semibold text-paper/90 hover:bg-enamel-2 hover:text-paper'
+const linkClass = 'inline-flex min-h-11 items-center rounded-md px-3 text-base font-semibold text-paper/90 hover:bg-white/10 hover:text-paper'
 
 export function SiteHeader() {
   const me = useMe()
@@ -17,8 +17,8 @@ export function SiteHeader() {
 
   return (
     <header className="bg-enamel text-paper">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <Link to="/" className="font-display text-3xl leading-none text-lamp">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <Link to="/" className="inline-flex min-h-11 items-center font-display text-3xl leading-none text-lamp">
           SportsCourt
         </Link>
 
@@ -70,7 +70,7 @@ export function SiteHeader() {
               <Link to="/login" className={linkClass}>
                 Masuk
               </Link>
-              <Link to="/register" className="rounded-md bg-lamp px-3 py-2 text-sm font-semibold text-ink hover:bg-wait-soft">
+              <Link to="/register" className="inline-flex min-h-11 items-center rounded-md bg-lamp px-3 text-base font-semibold text-ink hover:bg-wait-soft">
                 Daftar
               </Link>
             </>

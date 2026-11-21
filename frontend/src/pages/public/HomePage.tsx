@@ -25,7 +25,7 @@ export function HomePage() {
       <SiteHeader />
       <main>
         <section className="bg-enamel text-paper">
-          <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:py-16">
+          <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:py-16">
             <div>
               <h1 className="font-display max-w-xl text-5xl leading-none text-paper sm:text-7xl">
                 Lapangan kosong, jamnya terlihat
@@ -36,13 +36,13 @@ export function HomePage() {
               <form className="mt-8 grid gap-3 sm:grid-cols-[1fr_1fr_auto]" onSubmit={search}>
                 <label className="text-sm font-semibold text-paper">
                   Nama venue
-                  <input value={q} onChange={(event) => setQ(event.target.value)} className="mt-1 w-full rounded-md border border-enamel-2 bg-enamel-2 px-3 py-2.5 text-base text-paper placeholder:text-paper/50" />
+                  <input value={q} onChange={(event) => setQ(event.target.value)} className="mt-1 w-full rounded-md border border-paper/30 bg-enamel px-3 py-2.5 text-base text-paper placeholder:text-paper/60" />
                 </label>
                 <label className="text-sm font-semibold text-paper">
                   Kota
-                  <input value={city} onChange={(event) => setCity(event.target.value)} className="mt-1 w-full rounded-md border border-enamel-2 bg-enamel-2 px-3 py-2.5 text-base text-paper placeholder:text-paper/50" />
+                  <input value={city} onChange={(event) => setCity(event.target.value)} className="mt-1 w-full rounded-md border border-paper/30 bg-enamel px-3 py-2.5 text-base text-paper placeholder:text-paper/60" />
                 </label>
-                <button type="submit" className="lamp-live self-end rounded-md bg-lamp px-4 py-2.5 text-sm font-semibold text-ink hover:bg-wait-soft">
+                <button type="submit" className="lamp-live inline-flex min-h-11 items-center self-end rounded-md bg-lamp px-4 text-base font-semibold text-ink hover:bg-wait-soft">
                   Cari lapangan
                 </button>
               </form>
@@ -52,15 +52,15 @@ export function HomePage() {
                     Lanjut sebagai {roleLabel(me.data.role)}
                   </Link>
                 ) : (
-                  <Link to="/register" className="text-sm font-semibold text-lamp">
+                  <Link to="/register" className="inline-flex min-h-11 items-center text-base font-semibold text-lamp">
                     Belum punya akun? Daftar
                   </Link>
                 )}
               </div>
             </div>
-            <div className="rounded-lg border border-enamel-2 bg-enamel-2 p-5">
-              <p className="font-display text-5xl text-lamp tabular-nums">19:00</p>
-              <p className="mt-1 text-sm text-paper/80">Contoh jam di papan. Slot sungguhan ada di halaman venue.</p>
+            <div className="rounded-lg border border-paper/25 bg-enamel p-5">
+              <p className="font-display text-4xl text-lamp tabular-nums">19:00</p>
+              <p className="mt-2 text-base text-paper/90">Angka di papan ini hanya contoh. Jam yang bisa dipesan dihitung di halaman tiap lapangan.</p>
               <ul className="mt-6 divide-y divide-white/10 text-sm">
                 <li className="flex items-center justify-between py-3">
                   <span>Kosong</span>
@@ -79,23 +79,23 @@ export function HomePage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
           <h2 className="font-display text-4xl text-ink">Cara kerjanya</h2>
           <ol className="mt-6 grid gap-4 md:grid-cols-3">
             <li className="rounded-lg border border-line bg-panel p-5">
               <p className="font-display text-4xl text-open">1</p>
               <h3 className="mt-2 text-lg font-semibold">Cari venue yang disetujui</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">Filter kota, olahraga, dan harga. Venue yang belum lolos admin tidak muncul.</p>
+              <p className="mt-2 text-base leading-relaxed text-ink">Filter kota, olahraga, dan harga. Venue yang belum lolos admin tidak muncul.</p>
             </li>
             <li className="rounded-lg border border-line bg-panel p-5">
               <p className="font-display text-4xl text-open">2</p>
               <h3 className="mt-2 text-lg font-semibold">Pilih jam yang kosong</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">Slot dihitung dari jam buka, blokir, dan booking yang masih menahan jadwal.</p>
+              <p className="mt-2 text-base leading-relaxed text-ink">Slot dihitung dari jam buka, blokir, dan booking yang masih menahan jadwal.</p>
             </li>
             <li className="rounded-lg border border-line bg-panel p-5">
               <p className="font-display text-4xl text-open">3</p>
               <h3 className="mt-2 text-lg font-semibold">Tunggu keputusan pemilik</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink-soft">Pengajuan berstatus menunggu sampai pemilik mengonfirmasi atau menolak.</p>
+              <p className="mt-2 text-base leading-relaxed text-ink">Pengajuan berstatus menunggu sampai pemilik mengonfirmasi atau menolak.</p>
             </li>
           </ol>
         </section>

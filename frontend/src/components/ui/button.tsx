@@ -17,7 +17,7 @@ export function Button({ tone = 'open', className, type = 'button', ...props }: 
     <button
       type={type}
       className={cn(
-        'inline-flex items-center justify-center rounded-md px-4 py-2.5 text-sm font-semibold disabled:cursor-not-allowed',
+        'inline-flex min-h-11 items-center justify-center rounded-md px-4 py-2.5 text-base font-semibold disabled:cursor-not-allowed',
         tones[tone],
         className,
       )}

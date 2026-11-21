@@ -117,7 +117,7 @@ export function VenuePublicPage() {
       <p className="mt-2 text-sm text-ink-soft">
         Status slot tidak menampilkan nama pemesan atau alasan blokir.
         {me.data?.role === 'customer' ? ' Jam kosong bisa langsung diajukan.' : ''}
-        {!me.data && !me.isPending ? ' Masuk sebagai pelanggan untuk mengajukan jam kosong.' : ''}
+        {!me.data && !me.isPending ? ' Masuk sebagai pelanggan sebelum Anda mengajukan jam.' : ''}
         {me.data && me.data.role !== 'customer' ? ' Akun ini tidak membuat booking.' : ''}
       </p>
       {current.courts && current.courts.length > 0 ? (

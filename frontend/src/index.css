@@ -40,11 +40,11 @@
   --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
   --font-sans: "Source Sans 3", "Segoe UI", sans-serif;
   --color-enamel: #10241c;
-  --color-enamel-2: #1b3a2e;
-  --color-paper: #f3f0e6;
-  --color-panel: #fffdf8;
+  --color-enamel-2: #10241c;
+  --color-paper: #e7eeeb;
+  --color-panel: #dbe3df;
   --color-ink: #14241c;
-  --color-ink-soft: #3d5348;
+  --color-ink-soft: #1c3128;
   --color-line: #b7c4b8;
   --color-lamp: #e0a11a;
   --color-open: #0f6a42;
@@ -66,6 +66,16 @@ html {
 body {
   background: var(--color-paper);
   color: var(--color-ink);
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 ::selection {
