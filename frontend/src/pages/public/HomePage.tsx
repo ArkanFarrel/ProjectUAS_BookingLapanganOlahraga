@@ -1,4 +1,5 @@
 import { SiteHeader } from '@/components/layout/SiteHeader'
+import { Button } from '@/components/ui/button'
 import { useMe } from '@/features/auth/hooks'
 import { homePathForRole, roleLabel } from '@/features/auth/paths'
 import { usePageTitle } from '@/lib/usePageTitle'
@@ -21,81 +22,66 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="court-sheet min-h-screen text-ink">
       <SiteHeader />
       <main>
-        <section className="bg-enamel text-paper">
-          <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:py-16">
-            <div>
-              <h1 className="font-display max-w-xl text-5xl leading-none text-paper sm:text-7xl">
-                Lapangan kosong, jamnya terlihat
+        <section className="relative overflow-hidden">
+          <svg className="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1200 640" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="48" y="36" width="1104" height="568" fill="none" stroke="#10241c" strokeWidth="4" />
+            <line x1="600" y1="36" x2="600" y2="604" stroke="#10241c" strokeWidth="3" />
+            <rect x="48" y="150" width="220" height="340" fill="none" stroke="#10241c" strokeWidth="3" />
+            <rect x="932" y="150" width="220" height="340" fill="none" stroke="#10241c" strokeWidth="3" />
+            <circle cx="600" cy="320" r="54" fill="none" stroke="#10241c" strokeWidth="3" />
+          </svg>
+          <div className="relative mx-auto grid min-h-[78vh] max-w-7xl items-end gap-8 px-8 py-10 lg:grid-cols-12">
+            <div className="lg:col-span-7 lg:pb-8">
+              <h1 className="font-display text-6xl leading-[0.9] text-ink sm:text-8xl">
+                Jadwal lapangan
               </h1>
-              <p className="mt-5 max-w-xl text-lg leading-relaxed text-paper/85">
-                Cari venue yang sudah disetujui, lihat slot per jam, lalu ajukan booking. Harga dan status dihitung server, bukan dari halaman ini.
+              <p className="mt-4 max-w-md text-base leading-relaxed text-ink">
+                Jam yang masih bisa diajukan tampil di papan. Harga dan status dihitung server.
               </p>
-              <form className="mt-8 grid gap-3 sm:grid-cols-[1fr_1fr_auto]" onSubmit={search}>
-                <label className="text-sm font-semibold text-paper">
-                  Nama venue
-                  <input value={q} onChange={(event) => setQ(event.target.value)} className="mt-1 w-full rounded-md border border-paper/30 bg-enamel px-3 py-2.5 text-base text-paper placeholder:text-paper/60" />
-                </label>
-                <label className="text-sm font-semibold text-paper">
-                  Kota
-                  <input value={city} onChange={(event) => setCity(event.target.value)} className="mt-1 w-full rounded-md border border-paper/30 bg-enamel px-3 py-2.5 text-base text-paper placeholder:text-paper/60" />
-                </label>
-                <button type="submit" className="lamp-live inline-flex min-h-11 items-center self-end rounded-md bg-lamp px-4 text-base font-semibold text-ink hover:bg-wait-soft">
-                  Cari lapangan
-                </button>
-              </form>
-              <div className="mt-4 flex flex-wrap gap-3">
-                {me.data ? (
-                  <Link to={homePathForRole(me.data.role)} className="text-sm font-semibold text-lamp">
-                    Lanjut sebagai {roleLabel(me.data.role)}
-                  </Link>
-                ) : (
-                  <Link to="/register" className="inline-flex min-h-11 items-center text-base font-semibold text-lamp">
-                    Belum punya akun? Daftar
-                  </Link>
-                )}
-              </div>
+              {me.data ? (
+                <Link to={homePathForRole(me.data.role)} className="mt-4 inline-flex min-h-11 items-center text-base font-semibold text-open">
+                  Lanjut sebagai {roleLabel(me.data.role)}
+                </Link>
+              ) : (
+                <Link to="/register" className="mt-4 inline-flex min-h-11 items-center text-base font-semibold text-open">
+                  Daftar sebagai pelanggan
+                </Link>
+              )}
             </div>
-            <div className="rounded-lg border border-paper/25 bg-enamel p-5">
-              <p className="font-display text-4xl text-lamp tabular-nums">19:00</p>
-              <p className="mt-2 text-base text-paper/90">Angka di papan ini hanya contoh. Jam yang bisa dipesan dihitung di halaman tiap lapangan.</p>
-              <ul className="mt-6 divide-y divide-white/10 text-sm">
-                <li className="flex items-center justify-between py-3">
-                  <span>Kosong</span>
-                  <span className="rounded-full bg-open px-2 py-0.5 text-xs font-semibold text-panel">Bisa diajukan</span>
-                </li>
-                <li className="flex items-center justify-between py-3">
-                  <span>Terisi</span>
-                  <span className="rounded-full bg-taken px-2 py-0.5 text-xs font-semibold text-panel">Sudah ada booking</span>
-                </li>
-                <li className="flex items-center justify-between py-3">
-                  <span>Pemilik</span>
-                  <span className="text-paper/80">Yang menyetujui pengajuan</span>
-                </li>
-              </ul>
-            </div>
+            <form className="score-board p-4 lg:col-span-4 lg:col-start-9" onSubmit={search}>
+              <p className="text-5xl leading-none">CARI</p>
+              <label className="mt-4 block text-base text-paper">
+                Nama venue
+                <input value={q} onChange={(event) => setQ(event.target.value)} className="mt-1 min-h-11 w-full border border-lamp/50 bg-enamel px-3 text-base text-paper" />
+              </label>
+              <label className="mt-3 block text-base text-paper">
+                Kota
+                <input value={city} onChange={(event) => setCity(event.target.value)} className="mt-1 min-h-11 w-full border border-lamp/50 bg-enamel px-3 text-base text-paper" />
+              </label>
+              <Button type="submit" tone="lamp" className="mt-4 w-full">
+                Cari lapangan
+              </Button>
+            </form>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-          <h2 className="font-display text-4xl text-ink">Cara kerjanya</h2>
-          <ol className="mt-6 grid gap-4 md:grid-cols-3">
-            <li className="rounded-lg border border-line bg-panel p-5">
-              <p className="font-display text-4xl text-open">1</p>
-              <h3 className="mt-2 text-lg font-semibold">Cari venue yang disetujui</h3>
-              <p className="mt-2 text-base leading-relaxed text-ink">Filter kota, olahraga, dan harga. Venue yang belum lolos admin tidak muncul.</p>
+        <section className="mx-auto max-w-7xl px-8 py-14">
+          <h2 className="font-display text-5xl leading-none text-ink">Tiga langkah</h2>
+          <ol className="mt-6 border-l-[3px] border-ink">
+            <li className="border-b border-ink py-6 pl-6">
+              <h3 className="text-2xl font-semibold">Cari venue yang disetujui</h3>
+              <p className="mt-2 max-w-xl text-base leading-relaxed text-ink">Filter kota, olahraga, dan harga. Venue yang belum lolos admin tidak muncul.</p>
             </li>
-            <li className="rounded-lg border border-line bg-panel p-5">
-              <p className="font-display text-4xl text-open">2</p>
-              <h3 className="mt-2 text-lg font-semibold">Pilih jam yang kosong</h3>
-              <p className="mt-2 text-base leading-relaxed text-ink">Slot dihitung dari jam buka, blokir, dan booking yang masih menahan jadwal.</p>
+            <li className="border-b border-ink py-8 pl-10">
+              <h3 className="text-2xl font-semibold">Pilih jam yang kosong</h3>
+              <p className="mt-2 max-w-lg text-base leading-relaxed text-ink">Slot dihitung dari jam buka, blokir, dan booking yang masih menahan jadwal.</p>
             </li>
-            <li className="rounded-lg border border-line bg-panel p-5">
-              <p className="font-display text-4xl text-open">3</p>
-              <h3 className="mt-2 text-lg font-semibold">Tunggu keputusan pemilik</h3>
-              <p className="mt-2 text-base leading-relaxed text-ink">Pengajuan berstatus menunggu sampai pemilik mengonfirmasi atau menolak.</p>
+            <li className="py-5 pl-6">
+              <h3 className="text-2xl font-semibold">Tunggu keputusan pemilik</h3>
+              <p className="mt-2 max-w-xl text-base leading-relaxed text-ink">Pengajuan menunggu sampai pemilik mengonfirmasi atau menolak.</p>
             </li>
           </ol>
         </section>

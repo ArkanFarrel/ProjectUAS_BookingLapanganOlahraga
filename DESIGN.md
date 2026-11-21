@@ -19,4 +19,6 @@ SportsCourt memakai papan skor lapangan sebagai sistem visual.
 
 ## Komponen
 
-Tombol, badge, dan field ada di `frontend/src/components/ui`. Angka dashboard ada di papan enamel. Status memakai badge berwarna. Kalau venue belum punya foto, yang tampil adalah garis lapangan, bukan foto orang.
+Tombol, badge, dan field ada di `frontend/src/components/ui`. Komponen itu tetap dasar Tailwind yang sudah ada. Angka dashboard, jam slot, dan ringkasan booking memakai papan enamel dengan digit tabular. Status memakai badge berwarna. Kalau venue belum punya foto, yang tampil adalah garis lapangan, bukan foto orang.
+
+Garis lapangan juga jadi struktur halaman: garis tepi di latar, gambar lapangan di beranda, dan pemisah bagian. Beranda tidak menaruh judul dan kotak cari di tengah. Daftar venue menonjolkan satu venue, lalu baris yang lebih rapat.

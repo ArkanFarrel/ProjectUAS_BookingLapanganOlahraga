@@ -25,7 +25,7 @@ export function AdminHomePage() {
       ) : null}
       {dashboard.data ? (
         <>
-          <div className="mt-6 grid gap-6 rounded-lg bg-enamel px-5 py-6 sm:grid-cols-3">
+          <div className="score-board mt-6 grid gap-6 border-y-[3px] border-lamp px-5 py-6 sm:grid-cols-3">
             <StatReadout value={dashboard.data.users_count} label="Pengguna" />
             <StatReadout value={dashboard.data.owners_count} label="Pemilik venue" />
             <StatReadout value={dashboard.data.courts_count} label="Lapangan" />

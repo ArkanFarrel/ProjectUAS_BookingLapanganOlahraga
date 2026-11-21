@@ -108,30 +108,20 @@ export function BookingFormPage() {
           onSubmit={(event) => void form.handleSubmit((values) => submit.mutate(values))(event)}
           noValidate
         >
-          <dl className="space-y-2 rounded-lg bg-enamel p-4 text-sm text-paper">
-            <div className="flex justify-between gap-4">
-              <dt>Venue</dt>
-              <dd className="font-medium text-lamp">{venue.data?.name}</dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt>Lapangan</dt>
-              <dd className="font-medium text-paper">
-                {court.name}
-                {court.sport ? ` · ${court.sport.name}` : ''}
-              </dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt>Mulai</dt>
-              <dd className="font-medium text-paper">
-                {selection.date} {String(selection.hour).padStart(2, '0')}:00
-              </dd>
-            </div>
-          </dl>
+          <div className="score-board px-4 py-5">
+            <p className="text-7xl leading-none sm:text-8xl">
+              {String(selection.hour).padStart(2, '0')}:00
+            </p>
+            <p className="mt-3 text-base text-paper">
+              {venue.data?.name} · {court.name}
+              {court.sport ? ` · ${court.sport.name}` : ''} · {selection.date}
+            </p>
+          </div>
 
           <FormBanner message={formError} />
 
           <div>
-            <label htmlFor="duration_hours" className="block text-sm font-medium text-slate-900">
+            <label htmlFor="duration_hours" className="block text-base font-medium text-ink">
               Durasi
             </label>
             <select
@@ -150,7 +140,7 @@ export function BookingFormPage() {
           </div>
 
           <div>
-            <label htmlFor="notes" className="block text-sm font-medium text-slate-900">
+            <label htmlFor="notes" className="block text-base font-medium text-ink">
               Catatan
             </label>
             <textarea
@@ -160,10 +150,10 @@ export function BookingFormPage() {
               className={fieldClass}
               {...form.register('notes')}
             />
-            <p className="mt-1 text-sm text-slate-600">Opsional. Misalnya jumlah pemain atau perlengkapan yang dibawa.</p>
+            <p className="mt-1 text-base text-ink">Opsional. Misalnya jumlah pemain atau perlengkapan yang dibawa.</p>
           </div>
 
-          <p className="text-sm text-slate-800">
+          <p className="text-base text-ink">
             Perkiraan total{' '}
             <span className="font-semibold text-slate-900">
               {formatIdr(Number(court.price_per_hour) * (Number.isFinite(duration) ? duration : 1))}

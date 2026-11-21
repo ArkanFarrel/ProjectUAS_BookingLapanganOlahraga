@@ -156,7 +156,7 @@ export function VenuePublicPage() {
       ) : null}
       {availability.data?.is_closed ? <p className="mt-4 text-sm text-ink">Venue tutup pada tanggal ini.</p> : null}
       {availability.data && !availability.data.is_closed ? (
-        <ul className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <ul className="mt-4 grid grid-cols-1 gap-px bg-ink sm:grid-cols-2">
           {availability.data.slots.map((slot) => (
             <li key={slot.start_hour}>
               <SlotCell
@@ -190,13 +190,13 @@ function SlotCell({
 }) {
   const available = slot.status === 'available'
   const className = available
-    ? 'block rounded-md border border-open bg-open-soft px-3 py-2 text-sm text-open hover:bg-panel'
-    : 'block rounded-md border border-line bg-paper px-3 py-2 text-sm text-ink-soft'
+    ? 'score-board flex min-h-11 items-center justify-between gap-2 px-3 text-base hover:bg-enamel-2'
+    : 'flex min-h-11 items-center justify-between gap-2 bg-enamel/80 px-3 text-base text-paper/55'
 
   const body = (
     <>
-      <span className="block font-medium">{slot.label}</span>
-      <span>{slotLabel[slot.status]}</span>
+      <span className="font-display text-3xl leading-none tabular-nums">{slot.label}</span>
+      <span className="text-base text-paper">{slotLabel[slot.status]}</span>
     </>
   )
 

@@ -120,33 +120,49 @@ export function ExplorePage() {
         </Button>
       </form>
 
-      {venues.isPending ? <p className="mt-6 text-sm text-slate-700">Mencari venue...</p> : null}
+      {venues.isPending ? <p className="mt-6 text-base text-ink">Mencari venue...</p> : null}
       {venues.isError ? (
-        <p className="mt-6 text-sm text-red-700">{apiErrorMessage(venues.error, 'Pencarian gagal. Periksa filter lalu coba lagi.')}</p>
+        <p className="mt-6 text-base text-taken">{apiErrorMessage(venues.error, 'Pencarian gagal. Periksa filter lalu coba lagi.')}</p>
       ) : null}
       {venues.data && venues.data.data.length === 0 ? (
-        <p className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-700">
+        <p className="mt-6 border-y-[3px] border-ink py-6 text-base text-ink">
           Tidak ada venue yang cocok. Coba kota lain atau hapus filter harga.
         </p>
       ) : null}
 
-      <ul className="mt-6 grid gap-4 sm:grid-cols-2">
-        {venues.data?.data.map((venue) => (
-          <li key={venue.id}>
-            <Link to={`/venues/${venue.id}`} className="block overflow-hidden rounded-lg border border-line bg-panel hover:border-open">
+      <ul className="mt-8 border-t-[3px] border-ink">
+        {venues.data?.data.map((venue, index) => (
+          <li key={venue.id} className={index === 0 ? 'border-b-[3px] border-ink' : 'border-b border-ink'}>
+            <Link
+              to={`/venues/${venue.id}`}
+              className={
+                index === 0
+                  ? 'grid min-h-44 gap-4 py-4 sm:grid-cols-12'
+                  : 'flex min-h-11 items-center gap-4 py-3'
+              }
+            >
               {venue.cover_image_url ? (
-                <img src={venue.cover_image_url} alt="" className="h-40 w-full object-cover" />
+                <img
+                  src={venue.cover_image_url}
+                  alt=""
+                  className={index === 0 ? 'h-56 w-full object-cover sm:col-span-7' : 'h-14 w-20 object-cover'}
+                />
               ) : (
-                <CourtArt name={venue.name} className="h-40 w-full" />
+                <CourtArt
+                  name={venue.name}
+                  className={index === 0 ? 'h-56 w-full sm:col-span-7' : 'h-14 w-20'}
+                />
               )}
-              <span className="block p-4">
-                <span className="block font-display text-3xl leading-none text-ink">{venue.name}</span>
-                <span className="mt-2 block text-sm text-ink-soft">
-                  {venue.city}, {venue.province}
+              <span className={index === 0 ? 'sm:col-span-5 sm:py-4' : 'min-w-0 flex-1'}>
+                <span className={index === 0 ? 'block font-display text-5xl leading-none text-ink' : 'block text-base font-semibold text-ink'}>
+                  {venue.name}
                 </span>
-                <span className="mt-1 block text-sm text-ink">
-                  {venue.sports.map((sport) => sport.name).join(', ') || 'Belum ada lapangan'}
+                <span className="mt-1 block text-base text-ink">
+                  {venue.city}, {venue.province}
                   {venue.starting_price ? ` · mulai ${formatIdr(venue.starting_price)}` : ''}
+                </span>
+                <span className="mt-1 block text-base text-ink">
+                  {venue.sports.map((sport) => sport.name).join(', ') || 'Belum ada lapangan'}
                 </span>
               </span>
             </Link>
@@ -159,7 +175,7 @@ export function ExplorePage() {
           <button
             type="button"
             disabled={(filters.page ?? 1) <= 1}
-            className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50"
+            className="inline-flex min-h-11 items-center border border-ink px-3 text-base disabled:opacity-50"
             onClick={() => {
               const next = new URLSearchParams(params)
               next.set('page', String((filters.page ?? 1) - 1))
@@ -174,7 +190,7 @@ export function ExplorePage() {
           <button
             type="button"
             disabled={(filters.page ?? 1) >= venues.data.meta.last_page}
-            className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50"
+            className="inline-flex min-h-11 items-center border border-ink px-3 text-base disabled:opacity-50"
             onClick={() => {
               const next = new URLSearchParams(params)
               next.set('page', String((filters.page ?? 1) + 1))

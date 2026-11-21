@@ -20,7 +20,7 @@ export function OwnerHomePage() {
       ) : null}
       {dashboard.data ? (
         <>
-          <div className="mt-6 grid gap-6 rounded-lg bg-enamel px-5 py-6 sm:grid-cols-4">
+          <div className="score-board mt-6 grid gap-6 border-y-[3px] border-lamp px-5 py-6 sm:grid-cols-4">
             <StatReadout value={dashboard.data.venues_count} label="Venue" />
             <StatReadout value={dashboard.data.courts_count} label="Lapangan" />
             <StatReadout value={dashboard.data.pending_bookings} label="Menunggu" />

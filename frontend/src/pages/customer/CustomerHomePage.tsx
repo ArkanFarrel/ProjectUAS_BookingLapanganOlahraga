@@ -20,7 +20,7 @@ export function CustomerHomePage() {
       ) : null}
       {dashboard.data ? (
         <>
-          <div className="mt-6 flex flex-wrap gap-8 rounded-lg bg-enamel px-5 py-6">
+          <div className="score-board mt-6 flex flex-wrap gap-8 border-y-[3px] border-lamp px-5 py-6">
             <StatReadout value={dashboard.data.upcoming_count} label="Akan datang" />
             <StatReadout value={dashboard.data.pending_count} label="Menunggu pemilik" />
           </div>

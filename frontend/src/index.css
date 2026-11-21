@@ -64,8 +64,28 @@ html {
 }
 
 body {
-  background: var(--color-paper);
+  background-color: var(--color-paper);
   color: var(--color-ink);
+}
+
+/* Garis lapangan dipakai sebagai tepi halaman, bukan stiker di atas kartu. */
+.court-sheet {
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(#10241c, #10241c),
+    linear-gradient(#10241c, #10241c),
+    linear-gradient(#10241c, #10241c);
+  background-size: 3px 100%, 3px 100%, 100% 3px;
+  background-position: 0 0, 6px 0, 0 100%;
+  background-repeat: no-repeat;
+}
+
+.score-board {
+  background: #10241c;
+  color: #e0a11a;
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: 0.04em;
 }
 
 h1,
