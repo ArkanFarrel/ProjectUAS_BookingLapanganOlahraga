@@ -1,4 +1,5 @@
 import { FormBanner } from '@/components/auth/FormBanner'
+import { fieldClass } from '@/components/ui/field'
 import { SubmitButton } from '@/components/auth/SubmitButton'
 import { AppShell } from '@/components/layout/AppShell'
 import { apiErrorMessage } from '@/features/auth/formErrors'
@@ -91,8 +92,8 @@ export function BookingFormPage() {
       <Link to={back} className="text-sm font-medium text-emerald-800">
         Kembali ke venue
       </Link>
-      <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900">Ajukan booking</h1>
-      <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-700">
+      <h1 className="mt-3 font-display text-5xl leading-none text-ink">Ajukan booking</h1>
+      <p className="mt-3 max-w-xl text-base leading-relaxed text-ink-soft">
         Pengajuan berstatus menunggu sampai pemilik venue mengonfirmasi. Harga dihitung server dari harga lapangan saat ini.
       </p>
 
@@ -107,21 +108,21 @@ export function BookingFormPage() {
           onSubmit={(event) => void form.handleSubmit((values) => submit.mutate(values))(event)}
           noValidate
         >
-          <dl className="space-y-2 text-sm text-slate-800">
+          <dl className="space-y-2 rounded-lg bg-enamel p-4 text-sm text-paper">
             <div className="flex justify-between gap-4">
               <dt>Venue</dt>
-              <dd className="font-medium text-slate-900">{venue.data?.name}</dd>
+              <dd className="font-medium text-lamp">{venue.data?.name}</dd>
             </div>
             <div className="flex justify-between gap-4">
               <dt>Lapangan</dt>
-              <dd className="font-medium text-slate-900">
+              <dd className="font-medium text-paper">
                 {court.name}
                 {court.sport ? ` · ${court.sport.name}` : ''}
               </dd>
             </div>
             <div className="flex justify-between gap-4">
               <dt>Mulai</dt>
-              <dd className="font-medium text-slate-900">
+              <dd className="font-medium text-paper">
                 {selection.date} {String(selection.hour).padStart(2, '0')}:00
               </dd>
             </div>
@@ -135,7 +136,7 @@ export function BookingFormPage() {
             </label>
             <select
               id="duration_hours"
-              className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 focus:border-emerald-700"
+              className={fieldClass}
               {...form.register('duration_hours', { valueAsNumber: true })}
             >
               <option value={1}>1 jam</option>
@@ -156,7 +157,7 @@ export function BookingFormPage() {
               id="notes"
               rows={3}
               maxLength={500}
-              className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-base text-slate-900 focus:border-emerald-700"
+              className={fieldClass}
               {...form.register('notes')}
             />
             <p className="mt-1 text-sm text-slate-600">Opsional. Misalnya jumlah pemain atau perlengkapan yang dibawa.</p>

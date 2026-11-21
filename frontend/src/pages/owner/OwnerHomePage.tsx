@@ -1,3 +1,4 @@
+import { StatReadout } from '@/components/common/StatReadout'
 import { AppShell } from '@/components/layout/AppShell'
 import { apiErrorMessage } from '@/features/auth/formErrors'
 import { BookingLines } from '@/features/bookings/BookingLines'
@@ -12,21 +13,24 @@ export function OwnerHomePage() {
 
   return (
     <AppShell>
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Area pemilik venue</h1>
+      <h1 className="font-display text-5xl leading-none text-ink">Area pemilik venue</h1>
       {dashboard.isPending ? <p className="mt-4 text-sm text-slate-700">Memuat ringkasan...</p> : null}
       {dashboard.isError ? (
         <p className="mt-4 text-sm text-red-800">{apiErrorMessage(dashboard.error, 'Ringkasan gagal dimuat.')}</p>
       ) : null}
       {dashboard.data ? (
         <>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-800">
-            {dashboard.data.venues_count} venue dan {dashboard.data.courts_count} lapangan. {dashboard.data.pending_bookings} booking menunggu, {dashboard.data.confirmed_upcoming} sudah dikonfirmasi dan belum selesai.
-          </p>
+          <div className="mt-6 grid gap-6 rounded-lg bg-enamel px-5 py-6 sm:grid-cols-4">
+            <StatReadout value={dashboard.data.venues_count} label="Venue" />
+            <StatReadout value={dashboard.data.courts_count} label="Lapangan" />
+            <StatReadout value={dashboard.data.pending_bookings} label="Menunggu" />
+            <StatReadout value={dashboard.data.confirmed_upcoming} label="Dikonfirmasi" />
+          </div>
           <div className="mt-4 flex flex-wrap gap-3">
-            <Link to="/owner/venues" className="inline-flex rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800">
+            <Link to="/owner/venues" className="inline-flex rounded-md bg-open px-4 py-2.5 text-sm font-semibold text-panel hover:bg-enamel">
               Venue saya
             </Link>
-            <Link to="/owner/bookings" className="inline-flex rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50">
+            <Link to="/owner/bookings" className="inline-flex rounded-md border border-line bg-panel px-4 py-2.5 text-sm font-semibold text-ink hover:bg-paper">
               Booking masuk
             </Link>
           </div>

@@ -1,4 +1,6 @@
+import { CourtArt } from '@/components/common/CourtArt'
 import { AppShell } from '@/components/layout/AppShell'
+import { fieldClass } from '@/components/ui/field'
 import { apiErrorMessage } from '@/features/auth/formErrors'
 import { useMe } from '@/features/auth/hooks'
 import { bookingNewPath } from '@/features/bookings/api'
@@ -46,7 +48,7 @@ export function VenuePublicPage() {
   if (venue.isPending) {
     return (
       <AppShell>
-        <p className="text-sm text-slate-700">Memuat venue...</p>
+        <p className="text-sm text-ink">Memuat venue...</p>
       </AppShell>
     )
   }
@@ -54,9 +56,9 @@ export function VenuePublicPage() {
   if (venue.isError || !venue.data) {
     return (
       <AppShell>
-        <h1 className="text-2xl font-semibold text-slate-900">Venue tidak tersedia</h1>
-        <p className="mt-2 text-sm text-slate-600">Venue ini belum disetujui, sedang ditutup, atau tidak ada.</p>
-        <Link to="/explore" className="mt-4 inline-flex text-sm font-medium text-emerald-800">
+        <h1 className="text-2xl font-semibold text-ink">Venue tidak tersedia</h1>
+        <p className="mt-2 text-sm text-ink-soft">Venue ini belum disetujui, sedang ditutup, atau tidak ada.</p>
+        <Link to="/explore" className="mt-4 inline-flex text-sm font-medium text-open">
           Kembali ke pencarian
         </Link>
       </AppShell>
@@ -67,20 +69,21 @@ export function VenuePublicPage() {
 
   return (
     <AppShell>
-      <Link to="/explore" className="text-sm font-medium text-emerald-800">
+      <Link to="/explore" className="text-sm font-medium text-open">
         Kembali ke pencarian
       </Link>
-      <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900">{current.name}</h1>
-      <p className="mt-2 text-sm text-slate-600">
+      {current.images && current.images.length > 0 ? null : <CourtArt name={current.name} className="mt-4 h-48 w-full rounded-lg" />}
+      <h1 className="mt-4 font-display text-5xl leading-none text-ink">{current.name}</h1>
+      <p className="mt-2 text-sm text-ink-soft">
         {current.address}, {current.city}, {current.province}
       </p>
       {/* Deskripsi ditampilkan sebagai teks. React tidak menjalankan HTML di dalamnya. */}
-      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-800">{current.description}</p>
-      <p className="mt-3 text-sm text-slate-700">
+      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink">{current.description}</p>
+      <p className="mt-3 text-sm text-ink">
         Telepon {current.phone}. Zona waktu {current.timezone}.
       </p>
       {current.facilities.length > 0 ? (
-        <p className="mt-2 text-sm text-slate-700">
+        <p className="mt-2 text-sm text-ink">
           Fasilitas:{' '}
           {current.facilities
             .map((key) => facilityOptions.find((item) => item.value === key)?.label ?? key)
@@ -98,8 +101,8 @@ export function VenuePublicPage() {
         </ul>
       ) : null}
 
-      <h2 className="mt-8 text-lg font-semibold text-slate-900">Jam buka</h2>
-      <ul className="mt-2 space-y-1 text-sm text-slate-800">
+      <h2 className="mt-8 text-lg font-semibold text-ink">Jam buka</h2>
+      <ul className="mt-2 space-y-1 text-sm text-ink">
         {current.operating_hours?.map((hour) => (
           <li key={hour.day_of_week}>
             {dayNames[hour.day_of_week]}:{' '}
@@ -110,8 +113,8 @@ export function VenuePublicPage() {
         ))}
       </ul>
 
-      <h2 className="mt-8 text-lg font-semibold text-slate-900">Ketersediaan</h2>
-      <p className="mt-2 text-sm text-slate-600">
+      <h2 className="mt-8 text-lg font-semibold text-ink">Ketersediaan</h2>
+      <p className="mt-2 text-sm text-ink-soft">
         Status slot tidak menampilkan nama pemesan atau alasan blokir.
         {me.data?.role === 'customer' ? ' Jam kosong bisa langsung diajukan.' : ''}
         {!me.data && !me.isPending ? ' Masuk sebagai pelanggan untuk mengajukan jam kosong.' : ''}
@@ -119,12 +122,12 @@ export function VenuePublicPage() {
       </p>
       {current.courts && current.courts.length > 0 ? (
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <label className="text-sm text-slate-800">
+          <label className="text-sm text-ink">
             Lapangan
             <select
               value={selectedCourt ?? ''}
               onChange={(event) => setCourtId(Number(event.target.value))}
-              className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
+              className={fieldClass}
             >
               {current.courts.map((court) => (
                 <option key={court.id} value={court.id}>
@@ -133,25 +136,25 @@ export function VenuePublicPage() {
               ))}
             </select>
           </label>
-          <label className="text-sm text-slate-800">
+          <label className="text-sm text-ink">
             Tanggal
             <input
               type="date"
               value={date}
               onChange={(event) => setDate(event.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+              className={fieldClass}
             />
           </label>
         </div>
       ) : (
-        <p className="mt-3 text-sm text-slate-600">Venue ini belum punya lapangan aktif.</p>
+        <p className="mt-3 text-sm text-ink-soft">Venue ini belum punya lapangan aktif.</p>
       )}
 
-      {availability.isPending && selectedCourt ? <p className="mt-4 text-sm text-slate-700">Menghitung slot...</p> : null}
+      {availability.isPending && selectedCourt ? <p className="mt-4 text-sm text-ink">Menghitung slot...</p> : null}
       {availability.isError ? (
-        <p className="mt-4 text-sm text-red-700">{apiErrorMessage(availability.error, 'Jadwal gagal dimuat.')}</p>
+        <p className="mt-4 text-sm text-taken">{apiErrorMessage(availability.error, 'Jadwal gagal dimuat.')}</p>
       ) : null}
-      {availability.data?.is_closed ? <p className="mt-4 text-sm text-slate-700">Venue tutup pada tanggal ini.</p> : null}
+      {availability.data?.is_closed ? <p className="mt-4 text-sm text-ink">Venue tutup pada tanggal ini.</p> : null}
       {availability.data && !availability.data.is_closed ? (
         <ul className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
           {availability.data.slots.map((slot) => (
@@ -187,8 +190,8 @@ function SlotCell({
 }) {
   const available = slot.status === 'available'
   const className = available
-    ? 'block rounded-lg border border-emerald-700 px-3 py-2 text-sm text-emerald-900 hover:bg-emerald-50'
-    : 'block rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600'
+    ? 'block rounded-md border border-open bg-open-soft px-3 py-2 text-sm text-open hover:bg-panel'
+    : 'block rounded-md border border-line bg-paper px-3 py-2 text-sm text-ink-soft'
 
   const body = (
     <>

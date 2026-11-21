@@ -1,3 +1,4 @@
+import { StatReadout } from '@/components/common/StatReadout'
 import { AppShell } from '@/components/layout/AppShell'
 import { apiErrorMessage } from '@/features/auth/formErrors'
 import { BookingLines } from '@/features/bookings/BookingLines'
@@ -12,21 +13,22 @@ export function CustomerHomePage() {
 
   return (
     <AppShell>
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Area pelanggan</h1>
+      <h1 className="font-display text-5xl leading-none text-ink">Area pelanggan</h1>
       {dashboard.isPending ? <p className="mt-4 text-sm text-slate-700">Memuat ringkasan...</p> : null}
       {dashboard.isError ? (
         <p className="mt-4 text-sm text-red-800">{apiErrorMessage(dashboard.error, 'Ringkasan gagal dimuat.')}</p>
       ) : null}
       {dashboard.data ? (
         <>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-800">
-            {dashboard.data.upcoming_count} booking akan datang, {dashboard.data.pending_count} masih menunggu konfirmasi pemilik.
-          </p>
+          <div className="mt-6 flex flex-wrap gap-8 rounded-lg bg-enamel px-5 py-6">
+            <StatReadout value={dashboard.data.upcoming_count} label="Akan datang" />
+            <StatReadout value={dashboard.data.pending_count} label="Menunggu pemilik" />
+          </div>
           <div className="mt-4 flex flex-wrap gap-3">
-            <Link to="/explore" className="inline-flex rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800">
+            <Link to="/explore" className="inline-flex rounded-md bg-open px-4 py-2.5 text-sm font-semibold text-panel hover:bg-enamel">
               Cari lapangan
             </Link>
-            <Link to="/customer/bookings" className="inline-flex rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50">
+            <Link to="/customer/bookings" className="inline-flex rounded-md border border-line bg-panel px-4 py-2.5 text-sm font-semibold text-ink hover:bg-paper">
               Semua booking
             </Link>
           </div>

@@ -1,6 +1,9 @@
 import { useLogout, useMe } from '@/features/auth/hooks'
 import { homePathForRole } from '@/features/auth/paths'
+import { cn } from '@/lib/cn'
 import { Link, useNavigate } from 'react-router-dom'
+
+const linkClass = 'rounded-md px-3 py-2 text-sm font-semibold text-paper/90 hover:bg-enamel-2 hover:text-paper'
 
 export function SiteHeader() {
   const me = useMe()
@@ -13,97 +16,61 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
-        <Link
-          to="/"
-          className="text-xl font-semibold tracking-tight text-emerald-800"
-        >
+    <header className="bg-enamel text-paper">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <Link to="/" className="font-display text-3xl leading-none text-lamp">
           SportsCourt
         </Link>
 
-        <nav aria-label="Akun" className="flex flex-wrap items-center justify-end gap-2">
-          <Link
-            to="/explore"
-            className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-          >
+        <nav aria-label="Akun" className="flex flex-wrap items-center justify-end gap-1">
+          <Link to="/explore" className={linkClass}>
             Cari
           </Link>
-          {me.isPending ? (
-            <span
-              className="inline-block h-9 w-28 rounded-lg bg-slate-100"
-              aria-hidden="true"
-            />
-          ) : me.data ? (
+          {me.isPending ? <span className="inline-block h-9 w-24 rounded-md bg-enamel-2" aria-hidden="true" /> : null}
+          {me.data ? (
             <>
-              <span className="hidden max-w-40 truncate text-sm text-slate-700 sm:inline">
-                {me.data.name}
-              </span>
-              <Link
-                to={homePathForRole(me.data.role)}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-              >
+              <span className="hidden max-w-40 truncate px-2 text-sm text-paper/80 sm:inline">{me.data.name}</span>
+              <Link to={homePathForRole(me.data.role)} className={linkClass}>
                 Area saya
               </Link>
               {me.data.role === 'customer' ? (
-                <Link
-                  to="/customer/bookings"
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-                >
+                <Link to="/customer/bookings" className={linkClass}>
                   Booking
                 </Link>
               ) : null}
               {me.data.role === 'owner' ? (
-                <Link
-                  to="/owner/bookings"
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-                >
+                <Link to="/owner/bookings" className={linkClass}>
                   Booking
                 </Link>
               ) : null}
               {me.data.role === 'owner' ? (
-                <Link
-                  to="/owner/venues"
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-                >
+                <Link to="/owner/venues" className={linkClass}>
                   Venue
                 </Link>
               ) : null}
               {me.data.role === 'admin' ? (
-                <Link
-                  to="/admin/venues"
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-                >
+                <Link to="/admin/venues" className={linkClass}>
                   Verifikasi
                 </Link>
               ) : null}
-              <Link
-                to="/account"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-              >
+              <Link to="/account" className={linkClass}>
                 Akun
               </Link>
               <button
                 type="button"
                 onClick={() => void handleLogout()}
                 disabled={logout.isPending}
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+                className={cn(linkClass, 'disabled:opacity-60')}
               >
                 {logout.isPending ? 'Keluar...' : 'Keluar'}
               </button>
             </>
-          ) : (
+          ) : me.isPending ? null : (
             <>
-              <Link
-                to="/login"
-                className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-              >
+              <Link to="/login" className={linkClass}>
                 Masuk
               </Link>
-              <Link
-                to="/register"
-                className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800"
-              >
+              <Link to="/register" className="rounded-md bg-lamp px-3 py-2 text-sm font-semibold text-ink hover:bg-wait-soft">
                 Daftar
               </Link>
             </>

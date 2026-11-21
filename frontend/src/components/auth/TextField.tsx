@@ -1,3 +1,4 @@
+import { fieldClass } from '@/components/ui/field'
 import type { InputHTMLAttributes } from 'react'
 import type { UseFormRegisterReturn } from 'react-hook-form'
 
@@ -26,7 +27,7 @@ export function TextField({
 
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-slate-900">
+      <label htmlFor={id} className="block text-sm font-medium text-ink">
         {label}
       </label>
       <input
@@ -36,16 +37,16 @@ export function TextField({
         inputMode={inputMode}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy}
-        className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 placeholder:text-slate-500 focus:border-emerald-700 aria-invalid:border-red-700"
+        className={fieldClass}
         {...registration}
       />
       {hint && !error ? (
-        <p id={`${id}-hint`} className="mt-1.5 text-sm text-slate-600">
+        <p id={`${id}-hint`} className="mt-1.5 text-sm text-ink-soft">
           {hint}
         </p>
       ) : null}
       {error ? (
-        <p id={`${id}-error`} className="mt-1.5 text-sm text-red-700">
+        <p id={`${id}-error`} className="mt-1.5 text-sm text-taken">
           {error}
         </p>
       ) : null}

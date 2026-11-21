@@ -13,7 +13,7 @@ export function SubmitButton({
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex w-full items-center justify-center rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800 disabled:cursor-not-allowed disabled:bg-emerald-700/50"
+      className="inline-flex w-full items-center justify-center rounded-md bg-open px-4 py-2.5 text-sm font-semibold text-panel hover:bg-enamel disabled:cursor-not-allowed disabled:bg-open/50"
     >
       {pending ? pendingLabel : idleLabel}
     </button>

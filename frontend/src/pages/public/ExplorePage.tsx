@@ -1,4 +1,7 @@
+import { CourtArt } from '@/components/common/CourtArt'
 import { AppShell } from '@/components/layout/AppShell'
+import { Button } from '@/components/ui/button'
+import { fieldClass } from '@/components/ui/field'
 import { apiErrorMessage } from '@/features/auth/formErrors'
 import { exploreVenues, type ExploreFilters } from '@/features/discovery/api'
 import { listSports } from '@/features/venues/api'
@@ -38,13 +41,13 @@ export function ExplorePage() {
 
   return (
     <AppShell>
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Cari lapangan</h1>
-      <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600">
+      <h1 className="font-display text-5xl leading-none text-ink">Cari lapangan</h1>
+      <p className="mt-3 max-w-xl text-base leading-relaxed text-ink-soft">
         Daftar ini hanya venue yang sudah disetujui admin dan pemiliknya masih aktif.
       </p>
 
       <form
-        className="mt-6 grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:grid-cols-2"
+        className="mt-6 grid gap-3 rounded-lg border border-line bg-panel p-4 sm:grid-cols-2"
         onSubmit={(event) => {
           event.preventDefault()
           const next = new URLSearchParams(params)
@@ -59,15 +62,15 @@ export function ExplorePage() {
           apply(next)
         }}
       >
-        <label className="text-sm text-slate-800">
+        <label className="text-sm font-medium text-ink">
           Nama venue
-          <input value={q} onChange={(event) => setQ(event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input value={q} onChange={(event) => setQ(event.target.value)} className={fieldClass} />
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm font-medium text-ink">
           Kota
-          <input value={city} onChange={(event) => setCity(event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input value={city} onChange={(event) => setCity(event.target.value)} className={fieldClass} />
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm font-medium text-ink">
           Olahraga
           <select
             value={filters.sport}
@@ -77,7 +80,7 @@ export function ExplorePage() {
               else next.delete('sport')
               apply(next)
             }}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
+            className={fieldClass}
           >
             <option value="">Semua</option>
             {sports.data?.map((sport) => (
@@ -87,7 +90,7 @@ export function ExplorePage() {
             ))}
           </select>
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm font-medium text-ink">
           Urutan
           <select
             value={filters.sort}
@@ -96,7 +99,7 @@ export function ExplorePage() {
               next.set('sort', event.target.value)
               apply(next)
             }}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
+            className={fieldClass}
           >
             <option value="newest">Terbaru</option>
             <option value="price_asc">Harga termurah</option>
@@ -104,17 +107,17 @@ export function ExplorePage() {
             <option value="name">Nama</option>
           </select>
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm font-medium text-ink">
           Harga minimum
-          <input value={minPrice} onChange={(event) => setMinPrice(event.target.value)} inputMode="numeric" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input value={minPrice} onChange={(event) => setMinPrice(event.target.value)} inputMode="numeric" className={fieldClass} />
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm font-medium text-ink">
           Harga maksimum
-          <input value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} inputMode="numeric" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} inputMode="numeric" className={fieldClass} />
         </label>
-        <button type="submit" className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800 sm:col-span-2">
+        <Button type="submit" className="sm:col-span-2 sm:w-fit">
           Terapkan filter
-        </button>
+        </Button>
       </form>
 
       {venues.isPending ? <p className="mt-6 text-sm text-slate-700">Mencari venue...</p> : null}
@@ -127,26 +130,21 @@ export function ExplorePage() {
         </p>
       ) : null}
 
-      <ul className="mt-4 space-y-3">
+      <ul className="mt-6 grid gap-4 sm:grid-cols-2">
         {venues.data?.data.map((venue) => (
           <li key={venue.id}>
-            <Link
-              to={`/venues/${venue.id}`}
-              className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-4 hover:border-emerald-700"
-            >
+            <Link to={`/venues/${venue.id}`} className="block overflow-hidden rounded-lg border border-line bg-panel hover:border-open">
               {venue.cover_image_url ? (
-                <img src={venue.cover_image_url} alt="" className="h-20 w-28 rounded-lg object-cover" />
+                <img src={venue.cover_image_url} alt="" className="h-40 w-full object-cover" />
               ) : (
-                <span className="flex h-20 w-28 items-center justify-center rounded-lg bg-emerald-50 text-xs text-emerald-900">
-                  Tanpa foto
-                </span>
+                <CourtArt name={venue.name} className="h-40 w-full" />
               )}
-              <span>
-                <span className="block font-semibold text-slate-900">{venue.name}</span>
-                <span className="mt-1 block text-sm text-slate-600">
+              <span className="block p-4">
+                <span className="block font-display text-3xl leading-none text-ink">{venue.name}</span>
+                <span className="mt-2 block text-sm text-ink-soft">
                   {venue.city}, {venue.province}
                 </span>
-                <span className="mt-1 block text-sm text-slate-700">
+                <span className="mt-1 block text-sm text-ink">
                   {venue.sports.map((sport) => sport.name).join(', ') || 'Belum ada lapangan'}
                   {venue.starting_price ? ` · mulai ${formatIdr(venue.starting_price)}` : ''}
                 </span>
