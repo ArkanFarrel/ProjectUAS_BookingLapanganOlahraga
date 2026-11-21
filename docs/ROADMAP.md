@@ -1,6 +1,6 @@
 # SportsCourt — Implementation Roadmap
 
-Status: **Phase 7 selesai.** Phase 8 siap dimulai setelah konfirmasi.
+Status: **Phase 8 selesai.** Phase 9 siap dimulai setelah konfirmasi.
 
 ```mermaid
 flowchart LR
@@ -16,7 +16,7 @@ flowchart LR
 | **5. Discovery & Availability** ✅ | Listing/search/filter/pagination; detail venue; operating hours UI; `court_blocks`; `AvailabilityService` + endpoint; halaman explore & detail | Unit test availability (jam tutup, blok, booking, past, timezone WITA/WIT) lulus. Query log daftar venue tidak bertambah per venue. |
 | **6. Booking** ✅ | Migration `booking_status_histories` (tabel `bookings` sudah ada sejak phase 5); `BookingService` (lock court, harga, transisi); confirm/reject/cancel; scheduler expire & complete; halaman ajukan booking, booking saya, dan booking masuk | Test overlap (termasuk batas `[start,end)`), state transition, cutoff cancel, expiry, dan concurrent booking di MariaDB lulus: tepat 1 dari 2 proses berhasil. `php artisan test` 63 lulus, 381 assertion. Alur ajukan lalu konfirmasi dicek di browser localhost. |
 | **7. Dashboards** ✅ | Endpoint dan halaman dashboard customer, owner, admin; admin kelola user dan olahraga; pantauan booking beserta riwayat status. `DemoDataSeeder` mengisi angka yang bisa dicek. Admin tidak dibuat seeder. | Angka dashboard dicocokkan ke konstanta seeder. Tes akses lintas role lulus. `php artisan test` 68 lulus, 458 assertion. |
-| **8. Testing & Security Audit** | Full test suite; audit OWASP (access control, IDOR, injection, XSS, CSRF, session, CORS, upload, mass assignment, rate limit, dependency `composer audit` / `npm audit`); `SECURITY.md` | Laporan audit beserta temuan & perbaikan; semua test kritis hijau dan hasilnya terdokumentasi |
+| **8. Testing & Security Audit** ✅ | `docs/SECURITY.md`; tes akses asing sebelum validasi; cek lapangan tersembunyi; `composer audit` dan `npm audit` | `php artisan test` 71 lulus, 469 assertion. `composer audit` tanpa advisory. `npm audit` 0 kerentanan. Login tanpa CSRF 419. Dua temuan kebocoran 422 diperbaiki. |
 | **9. Deployment Preparation** | Konfigurasi production (HTTPS, secure cookie, domain), strategi migrasi & backup, panduan deploy & rollback | Checklist deployment lengkap; tidak ada secret di repo |
 
 ## Urutan kerja per fitur (setiap phase)

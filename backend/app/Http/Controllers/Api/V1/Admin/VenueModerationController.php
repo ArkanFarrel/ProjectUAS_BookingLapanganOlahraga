@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+// Admin mengubah status venue, bukan data operasional seperti harga atau jam buka.
 class VenueModerationController extends Controller
 {
     public function index(VenueIndexRequest $request): AnonymousResourceCollection

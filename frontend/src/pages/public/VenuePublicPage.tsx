@@ -74,6 +74,7 @@ export function VenuePublicPage() {
       <p className="mt-2 text-sm text-slate-600">
         {current.address}, {current.city}, {current.province}
       </p>
+      {/* Deskripsi ditampilkan sebagai teks. React tidak menjalankan HTML di dalamnya. */}
       <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-800">{current.description}</p>
       <p className="mt-3 text-sm text-slate-700">
         Telepon {current.phone}. Zona waktu {current.timezone}.

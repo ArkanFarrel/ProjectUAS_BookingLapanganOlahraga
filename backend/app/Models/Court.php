@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\UserStatus;
+use App\Enums\VenueStatus;
 use Database\Factories\CourtFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -51,6 +53,19 @@ class Court extends Model
     public function blocks(): HasMany
     {
         return $this->hasMany(CourtBlock::class);
+    }
+
+    // Lapangan tersembunyi harus terlihat seperti tidak ada, termasuk saat tanggalnya salah.
+    public function isOpenToPublic(): bool
+    {
+        $this->loadMissing('venue.owner');
+        $venue = $this->venue;
+
+        return $this->is_active
+            && $venue !== null
+            && $venue->status === VenueStatus::Approved
+            && $venue->is_active
+            && $venue->owner?->status === UserStatus::Active;
     }
 
     public function imageUrl(): ?string

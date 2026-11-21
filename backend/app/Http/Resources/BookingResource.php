@@ -48,6 +48,7 @@ class BookingResource extends JsonResource
                 'slug' => $this->court->venue->slug,
             ],
             'can_cancel' => $viewer ? app(BookingService::class)->canCancel($viewer, $this->resource) : false,
+            // Email pelanggan tidak ikut. Pemilik cukup nama dan telepon untuk menghubungi.
             'customer' => $this->when(
                 $viewer && $viewer->id !== $this->user_id,
                 fn () => [

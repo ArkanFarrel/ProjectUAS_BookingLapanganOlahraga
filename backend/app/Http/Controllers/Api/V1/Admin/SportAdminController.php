@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Str;
 
+// Slug dibuat di server. Klien tidak boleh memilih alamat kategori.
 class SportAdminController extends Controller
 {
     public function index(): AnonymousResourceCollection

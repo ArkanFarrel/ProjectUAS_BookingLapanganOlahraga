@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+// user_id, harga, dan status tidak dibaca dari body. Service yang mengisinya.
 class BookingController extends Controller
 {
     public function store(StoreBookingRequest $request, BookingService $bookings): JsonResponse

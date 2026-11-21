@@ -13,6 +13,7 @@ use App\Services\BookingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+// Daftar ini hanya venue milik pemilik yang sedang login. Venue orang lain dianggap tidak ada.
 class OwnerBookingController extends Controller
 {
     public function index(OwnerBookingIndexRequest $request): AnonymousResourceCollection

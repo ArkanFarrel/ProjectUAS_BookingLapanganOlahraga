@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+// Nama file dibuat acak oleh Laravel. Nama asli dari komputer pemilik tidak disimpan.
 class VenueImageController extends Controller
 {
     use ResolvesOwnedVenue;

@@ -2,15 +2,18 @@
 
 namespace App\Http\Requests\Owner;
 
+use App\Http\Requests\Concerns\HidesForeignResources;
 use App\Models\Venue;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreCourtRequest extends FormRequest
 {
+    use HidesForeignResources;
+
     public function authorize(): bool
     {
-        return true;
+        return $this->hideForeignResource();
     }
 
     /**

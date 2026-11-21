@@ -119,6 +119,7 @@ export function MyBookingsPage() {
             <p className="mt-1 text-sm text-slate-700">
               {booking.code} · {booking.local.date} {booking.local.start}-{booking.local.end} · {formatIdr(booking.total_price)}
             </p>
+            {/* Catatan pelanggan ditampilkan sebagai teks, bukan HTML. */}
             {booking.notes ? <p className="mt-1 text-sm text-slate-600">{booking.notes}</p> : null}
             {booking.can_cancel ? (
               <div className="mt-3">

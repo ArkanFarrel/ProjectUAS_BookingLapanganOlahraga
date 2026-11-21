@@ -7,6 +7,7 @@ use App\Http\Resources\SportResource;
 use App\Models\Sport;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+// Yang nonaktif disembunyikan supaya pelanggan tidak memesan kategori yang admin matikan.
 class SportController extends Controller
 {
     public function index(): AnonymousResourceCollection

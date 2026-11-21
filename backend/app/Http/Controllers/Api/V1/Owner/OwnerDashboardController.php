@@ -11,6 +11,7 @@ use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+// Angka di sini dihitung dari database, bukan dikirim dari halaman.
 class OwnerDashboardController extends Controller
 {
     public function __invoke(Request $request): JsonResponse

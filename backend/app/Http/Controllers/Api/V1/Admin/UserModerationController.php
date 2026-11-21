@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+// Admin tidak boleh membekukan admin lain. Kalau boleh, satu admin bisa mengunci yang lain.
 class UserModerationController extends Controller
 {
     public function index(UserIndexRequest $request): AnonymousResourceCollection

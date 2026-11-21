@@ -8,6 +8,7 @@ use App\Http\Resources\BookingResource;
 use App\Models\Booking;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
+// Admin hanya membaca. Mengubah status booking tetap tugas pemilik venue atau pelanggan.
 class BookingMonitorController extends Controller
 {
     public function index(AdminBookingIndexRequest $request): AnonymousResourceCollection

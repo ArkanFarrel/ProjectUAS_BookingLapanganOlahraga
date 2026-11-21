@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 
+// Nol tetap dikirim untuk status yang belum punya data, supaya halaman tidak mengira angkanya hilang.
 class AdminDashboardController extends Controller
 {
     public function __invoke(): JsonResponse

@@ -2,13 +2,16 @@
 
 namespace App\Http\Requests\Customer;
 
+use App\Http\Requests\Concerns\HidesForeignResources;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CancelBookingRequest extends FormRequest
 {
+    use HidesForeignResources;
+
     public function authorize(): bool
     {
-        return true;
+        return $this->hideForeignResource();
     }
 
     /**

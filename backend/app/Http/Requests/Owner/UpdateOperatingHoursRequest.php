@@ -2,14 +2,17 @@
 
 namespace App\Http\Requests\Owner;
 
+use App\Http\Requests\Concerns\HidesForeignResources;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 class UpdateOperatingHoursRequest extends FormRequest
 {
+    use HidesForeignResources;
+
     public function authorize(): bool
     {
-        return true;
+        return $this->hideForeignResource();
     }
 
     /**

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1\Public;
 
-use App\Enums\UserStatus;
-use App\Enums\VenueStatus;
 use App\Exceptions\InvalidAvailabilityDate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Public\AvailabilityRequest;
@@ -15,15 +13,8 @@ class AvailabilityController extends Controller
 {
     public function __invoke(AvailabilityRequest $request, Court $court, AvailabilityService $availability): JsonResponse
     {
-        $court->loadMissing('venue.owner');
-        $venue = $court->venue;
-        $visible = $court->is_active
-            && $venue !== null
-            && $venue->status === VenueStatus::Approved
-            && $venue->is_active
-            && $venue->owner?->status === UserStatus::Active;
-
-        if (! $visible) {
+        // Form request sudah menolak court tersembunyi. Ini cadangan kalau pemanggilan lain lupa.
+        if (! $court->isOpenToPublic()) {
             abort(404);
         }
 
