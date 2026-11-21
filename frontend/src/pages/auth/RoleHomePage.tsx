@@ -9,6 +9,8 @@ type RoleHomePageProps = {
   body: string
   primaryHref?: string
   primaryLabel?: string
+  secondaryHref?: string
+  secondaryLabel?: string
 }
 
 // Halaman ini hanya bukti guard role. Angka dashboard menyusul di fase 7.
@@ -17,6 +19,8 @@ export function RoleHomePage({
   body,
   primaryHref = '/account',
   primaryLabel = 'Kelola akun',
+  secondaryHref,
+  secondaryLabel,
 }: RoleHomePageProps) {
   usePageTitle(title)
   const me = useMe()
@@ -38,6 +42,14 @@ export function RoleHomePage({
         >
           {primaryLabel}
         </Link>
+        {secondaryHref && secondaryLabel ? (
+          <Link
+            to={secondaryHref}
+            className="inline-flex rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+          >
+            {secondaryLabel}
+          </Link>
+        ) : null}
         {primaryHref !== '/account' ? (
           <Link
             to="/account"

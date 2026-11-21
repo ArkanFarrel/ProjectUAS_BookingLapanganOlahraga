@@ -6,8 +6,11 @@ import { AccountPage } from '@/pages/auth/AccountPage'
 import { ForbiddenPage } from '@/pages/auth/ForbiddenPage'
 import { LoginPage } from '@/pages/auth/LoginPage'
 import { RegisterPage } from '@/pages/auth/RegisterPage'
+import { BookingFormPage } from '@/pages/customer/BookingFormPage'
 import { CustomerHomePage } from '@/pages/customer/CustomerHomePage'
+import { MyBookingsPage } from '@/pages/customer/MyBookingsPage'
 import { CourtFormPage } from '@/pages/owner/CourtFormPage'
+import { OwnerBookingsPage } from '@/pages/owner/OwnerBookingsPage'
 import { OwnerHomePage } from '@/pages/owner/OwnerHomePage'
 import { VenueCreatePage } from '@/pages/owner/VenueCreatePage'
 import { VenueDetailPage } from '@/pages/owner/VenueDetailPage'
@@ -75,11 +78,41 @@ export function AppRouter() {
           }
         />
         <Route
+          path="/bookings/new"
+          element={
+            <RequireAuth>
+              <RequireRole role="customer">
+                <BookingFormPage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/customer/bookings"
+          element={
+            <RequireAuth>
+              <RequireRole role="customer">
+                <MyBookingsPage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/owner"
           element={
             <RequireAuth>
               <RequireRole role="owner">
                 <OwnerHomePage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/owner/bookings"
+          element={
+            <RequireAuth>
+              <RequireRole role="owner">
+                <OwnerBookingsPage />
               </RequireRole>
             </RequireAuth>
           }

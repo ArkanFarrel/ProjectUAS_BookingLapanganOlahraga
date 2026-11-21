@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-// Dipakai dulu untuk menghitung slot. Pembuatan booking lewat API ada di fase berikutnya.
+// user_id diisi dari session. Harga dan status diisi BookingService, bukan dari body klien.
 #[Fillable([
     'code',
     'user_id',
@@ -64,5 +65,21 @@ class Booking extends Model
     public function court(): BelongsTo
     {
         return $this->belongsTo(Court::class);
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return HasMany<BookingStatusHistory, $this>
+     */
+    public function histories(): HasMany
+    {
+        return $this->hasMany(BookingStatusHistory::class);
     }
 }

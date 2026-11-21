@@ -19,7 +19,11 @@ export function RequireAuth({ children }: { children: ReactNode }) {
   }
 
   if (!me.data) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+    const from = location.pathname.startsWith('/bookings/')
+      ? `${location.pathname}${location.search}`
+      : location.pathname
+
+    return <Navigate to="/login" replace state={{ from }} />
   }
 
   return children

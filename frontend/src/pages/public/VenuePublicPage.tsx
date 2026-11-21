@@ -1,6 +1,8 @@
 import { AppShell } from '@/components/layout/AppShell'
 import { apiErrorMessage } from '@/features/auth/formErrors'
-import { getAvailability, getPublicVenue, type SlotStatus } from '@/features/discovery/api'
+import { useMe } from '@/features/auth/hooks'
+import { bookingNewPath } from '@/features/bookings/api'
+import { getAvailability, getPublicVenue, type AvailabilitySlot, type SlotStatus } from '@/features/discovery/api'
 import { dayNames, facilityOptions, formatIdr } from '@/features/venues/types'
 import { usePageTitle } from '@/lib/usePageTitle'
 import { useQuery } from '@tanstack/react-query'
@@ -24,6 +26,7 @@ function todayInput(): string {
 export function VenuePublicPage() {
   const params = useParams()
   const venueId = Number(params.venueId)
+  const me = useMe()
   const [date, setDate] = useState(todayInput())
   const [courtId, setCourtId] = useState<number | null>(null)
   const venue = useQuery({
@@ -109,6 +112,9 @@ export function VenuePublicPage() {
       <h2 className="mt-8 text-lg font-semibold text-slate-900">Ketersediaan</h2>
       <p className="mt-2 text-sm text-slate-600">
         Status slot tidak menampilkan nama pemesan atau alasan blokir.
+        {me.data?.role === 'customer' ? ' Jam kosong bisa langsung diajukan.' : ''}
+        {!me.data && !me.isPending ? ' Masuk sebagai pelanggan untuk mengajukan jam kosong.' : ''}
+        {me.data && me.data.role !== 'customer' ? ' Akun ini tidak membuat booking.' : ''}
       </p>
       {current.courts && current.courts.length > 0 ? (
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -148,20 +154,63 @@ export function VenuePublicPage() {
       {availability.data && !availability.data.is_closed ? (
         <ul className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
           {availability.data.slots.map((slot) => (
-            <li
-              key={slot.start_hour}
-              className={
-                slot.status === 'available'
-                  ? 'rounded-lg border border-emerald-700 px-3 py-2 text-sm text-emerald-900'
-                  : 'rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600'
-              }
-            >
-              <span className="block font-medium">{slot.label}</span>
-              <span>{slotLabel[slot.status]}</span>
+            <li key={slot.start_hour}>
+              <SlotCell
+                slot={slot}
+                href={
+                  slot.status === 'available' && selectedCourt
+                    ? bookingNewPath(current.id, selectedCourt, date, slot.start_hour)
+                    : null
+                }
+                role={me.data?.role ?? null}
+                pending={me.isPending}
+              />
             </li>
           ))}
         </ul>
       ) : null}
     </AppShell>
+  )
+}
+
+function SlotCell({
+  slot,
+  href,
+  role,
+  pending,
+}: {
+  slot: AvailabilitySlot
+  href: string | null
+  role: 'customer' | 'owner' | 'admin' | null
+  pending: boolean
+}) {
+  const available = slot.status === 'available'
+  const className = available
+    ? 'block rounded-lg border border-emerald-700 px-3 py-2 text-sm text-emerald-900 hover:bg-emerald-50'
+    : 'block rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600'
+
+  const body = (
+    <>
+      <span className="block font-medium">{slot.label}</span>
+      <span>{slotLabel[slot.status]}</span>
+    </>
+  )
+
+  if (!available || !href || pending || role === 'owner' || role === 'admin') {
+    return <div className={className}>{body}</div>
+  }
+
+  if (role === 'customer') {
+    return (
+      <Link to={href} className={className}>
+        {body}
+      </Link>
+    )
+  }
+
+  return (
+    <Link to="/login" state={{ from: href }} className={className}>
+      {body}
+    </Link>
   )
 }

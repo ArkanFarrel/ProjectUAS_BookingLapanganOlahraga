@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\BlockConflictsWithBooking;
+use App\Exceptions\BookingException;
 use App\Exceptions\InvalidVenueTransition;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\EnsureUserIsActive;
@@ -36,6 +37,15 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => $exception->getMessage(),
                     'code' => 'VENUE_INVALID_TRANSITION',
                 ], 409);
+            }
+        });
+
+        $exceptions->render(function (BookingException $exception, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'message' => $exception->getMessage(),
+                    'code' => $exception->errorCode,
+                ], $exception->status);
             }
         });
 

@@ -45,6 +45,22 @@ export function SiteHeader() {
               >
                 Area saya
               </Link>
+              {me.data.role === 'customer' ? (
+                <Link
+                  to="/customer/bookings"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                >
+                  Booking
+                </Link>
+              ) : null}
+              {me.data.role === 'owner' ? (
+                <Link
+                  to="/owner/bookings"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                >
+                  Booking
+                </Link>
+              ) : null}
               {me.data.role === 'owner' ? (
                 <Link
                   to="/owner/venues"

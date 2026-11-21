@@ -7,6 +7,8 @@ export function OwnerHomePage() {
       body="Daftarkan venue dan lapangan dari sini. Venue baru menunggu persetujuan admin sebelum bisa dipesan pelanggan."
       primaryHref="/owner/venues"
       primaryLabel="Venue saya"
+      secondaryHref="/owner/bookings"
+      secondaryLabel="Booking masuk"
     />
   )
 }

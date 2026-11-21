@@ -4,7 +4,11 @@ export function CustomerHomePage() {
   return (
     <RoleHomePage
       title="Area pelanggan"
-      body="Akun pelanggan sudah aktif. Pencarian venue dan pengajuan booking ditambahkan pada fase berikutnya."
+      body="Cari lapangan yang sudah disetujui, lalu ajukan jam kosong. Status booking menunggu sampai pemilik venue mengonfirmasi."
+      primaryHref="/customer/bookings"
+      primaryLabel="Booking saya"
+      secondaryHref="/explore"
+      secondaryLabel="Cari lapangan"
     />
   )
 }

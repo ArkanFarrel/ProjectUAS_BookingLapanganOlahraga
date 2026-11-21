@@ -19,6 +19,11 @@ function nextPath(role: UserRole, from: string | undefined): string {
     return from
   }
 
+  // Tamu yang memilih slot kosong harus kembali ke formulir booking, bukan ke beranda.
+  if (role === 'customer' && from?.startsWith('/bookings/') && !from.includes('//')) {
+    return from
+  }
+
   return home
 }
 

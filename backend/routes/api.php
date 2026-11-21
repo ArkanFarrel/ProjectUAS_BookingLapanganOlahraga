@@ -7,9 +7,11 @@ use App\Http\Controllers\Api\V1\Auth\LogoutController;
 use App\Http\Controllers\Api\V1\Auth\RegisterController;
 use App\Http\Controllers\Api\V1\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\V1\Auth\UpdateProfileController;
+use App\Http\Controllers\Api\V1\Customer\BookingController;
 use App\Http\Controllers\Api\V1\Owner\CourtBlockController;
 use App\Http\Controllers\Api\V1\Owner\CourtController;
 use App\Http\Controllers\Api\V1\Owner\OperatingHourController;
+use App\Http\Controllers\Api\V1\Owner\OwnerBookingController;
 use App\Http\Controllers\Api\V1\Owner\VenueController;
 use App\Http\Controllers\Api\V1\Owner\VenueImageController;
 use App\Http\Controllers\Api\V1\Public\AvailabilityController;
@@ -45,6 +47,18 @@ Route::prefix('v1')->group(function (): void {
         });
     });
 
+    Route::middleware(['auth:sanctum', 'active', 'role:customer'])->group(function (): void {
+        Route::post('/bookings', [BookingController::class, 'store'])
+            ->middleware('throttle:booking-create')
+            ->name('bookings.store');
+        Route::get('/bookings/my', [BookingController::class, 'mine'])->name('bookings.mine');
+        Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+    });
+
+    Route::middleware(['auth:sanctum', 'active'])->group(function (): void {
+        Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+    });
+
     Route::get('/sports', [SportController::class, 'index'])->name('sports.index');
     Route::get('/venues', [VenueDiscoveryController::class, 'index'])->name('venues.index');
     Route::get('/venues/{venue}', [VenueDiscoveryController::class, 'show'])->name('venues.show');
@@ -78,6 +92,11 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/courts/{court}/blocks', [CourtBlockController::class, 'index'])->name('owner.blocks.index');
         Route::post('/courts/{court}/blocks', [CourtBlockController::class, 'store'])->name('owner.blocks.store');
         Route::delete('/blocks/{block}', [CourtBlockController::class, 'destroy'])->name('owner.blocks.destroy');
+
+        Route::get('/bookings', [OwnerBookingController::class, 'index'])->name('owner.bookings.index');
+        Route::patch('/bookings/{booking}/confirm', [OwnerBookingController::class, 'confirm'])->name('owner.bookings.confirm');
+        Route::patch('/bookings/{booking}/reject', [OwnerBookingController::class, 'reject'])->name('owner.bookings.reject');
+        Route::patch('/bookings/{booking}/cancel', [OwnerBookingController::class, 'cancel'])->name('owner.bookings.cancel');
     });
 
     Route::middleware(['auth:sanctum', 'active', 'role:admin'])->prefix('admin')->group(function (): void {
