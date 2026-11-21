@@ -16,6 +16,7 @@ class SportResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'is_active' => (bool) $this->is_active,
         ];
     }
 }

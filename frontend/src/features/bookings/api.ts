@@ -26,6 +26,13 @@ export type Booking = {
   can_cancel: boolean
   customer?: { name: string | null; phone: string | null }
   created_at: string | null
+  histories?: Array<{
+    from_status: BookingStatus | null
+    to_status: BookingStatus
+    reason: string | null
+    changed_by: { name: string } | null
+    created_at: string | null
+  }>
 }
 
 export type BookingPage = {

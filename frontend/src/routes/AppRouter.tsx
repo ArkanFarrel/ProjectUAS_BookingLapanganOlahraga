@@ -1,5 +1,9 @@
 import { setUnauthorizedHandler } from '@/lib/axios'
+import { AdminBookingDetailPage } from '@/pages/admin/AdminBookingDetailPage'
+import { AdminBookingsPage } from '@/pages/admin/AdminBookingsPage'
 import { AdminHomePage } from '@/pages/admin/AdminHomePage'
+import { AdminSportsPage } from '@/pages/admin/AdminSportsPage'
+import { AdminUsersPage } from '@/pages/admin/AdminUsersPage'
 import { AdminVenueDetailPage } from '@/pages/admin/AdminVenueDetailPage'
 import { AdminVenueListPage } from '@/pages/admin/AdminVenueListPage'
 import { AccountPage } from '@/pages/auth/AccountPage'
@@ -173,6 +177,46 @@ export function AppRouter() {
             <RequireAuth>
               <RequireRole role="admin">
                 <AdminHomePage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <RequireAuth>
+              <RequireRole role="admin">
+                <AdminUsersPage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin/sports"
+          element={
+            <RequireAuth>
+              <RequireRole role="admin">
+                <AdminSportsPage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin/bookings"
+          element={
+            <RequireAuth>
+              <RequireRole role="admin">
+                <AdminBookingsPage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin/bookings/:bookingId"
+          element={
+            <RequireAuth>
+              <RequireRole role="admin">
+                <AdminBookingDetailPage />
               </RequireRole>
             </RequireAuth>
           }

@@ -1,6 +1,6 @@
 import type { UserRole } from '@/types/user'
 
-// Tujuan setelah login. Halaman ini hanya penanda role, bukan dashboard.
+// Tujuan setelah login. Halaman role sudah berisi ringkasan dari database.
 export function homePathForRole(role: UserRole): string {
   if (role === 'owner') {
     return '/owner'

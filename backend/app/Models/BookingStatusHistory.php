@@ -31,4 +31,12 @@ class BookingStatusHistory extends Model
     {
         return $this->belongsTo(Booking::class);
     }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function actor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'changed_by');
+    }
 }

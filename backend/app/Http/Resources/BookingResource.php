@@ -56,6 +56,7 @@ class BookingResource extends JsonResource
                 ],
             ),
             'created_at' => $this->created_at?->utc()->format('Y-m-d\TH:i:s\Z'),
+            'histories' => BookingHistoryResource::collection($this->whenLoaded('histories')),
         ];
     }
 }
