@@ -7,6 +7,17 @@ return [
     'email' => ':attribute harus berupa email yang valid.',
     'max' => [
         'string' => ':attribute maksimal :max karakter.',
+        'numeric' => ':attribute terlalu besar.',
+        'file' => ':attribute maksimal :max KB.',
+    ],
+    'image' => ':attribute harus berupa gambar.',
+    'mimes' => ':attribute harus berformat: :values.',
+    'dimensions' => 'Ukuran :attribute melebihi batas piksel.',
+    'file' => ':attribute harus berupa file.',
+    'in' => ':attribute tidak valid.',
+    'numeric' => ':attribute harus berupa angka.',
+    'gt' => [
+        'numeric' => ':attribute harus lebih dari :value.',
     ],
     'min' => [
         'string' => ':attribute minimal :min karakter.',

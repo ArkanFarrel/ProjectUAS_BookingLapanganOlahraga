@@ -4,7 +4,9 @@ export function OwnerHomePage() {
   return (
     <RoleHomePage
       title="Area pemilik venue"
-      body="Akun pemilik sudah aktif dan bisa dipakai nanti untuk mendaftarkan venue. Verifikasi venue dilakukan admin, bukan saat pendaftaran akun."
+      body="Daftarkan venue dan lapangan dari sini. Venue baru menunggu persetujuan admin sebelum bisa dipesan pelanggan."
+      primaryHref="/owner/venues"
+      primaryLabel="Venue saya"
     />
   )
 }

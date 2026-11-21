@@ -1,11 +1,17 @@
 import { setUnauthorizedHandler } from '@/lib/axios'
 import { AdminHomePage } from '@/pages/admin/AdminHomePage'
+import { AdminVenueDetailPage } from '@/pages/admin/AdminVenueDetailPage'
+import { AdminVenueListPage } from '@/pages/admin/AdminVenueListPage'
 import { AccountPage } from '@/pages/auth/AccountPage'
 import { ForbiddenPage } from '@/pages/auth/ForbiddenPage'
 import { LoginPage } from '@/pages/auth/LoginPage'
 import { RegisterPage } from '@/pages/auth/RegisterPage'
 import { CustomerHomePage } from '@/pages/customer/CustomerHomePage'
+import { CourtFormPage } from '@/pages/owner/CourtFormPage'
 import { OwnerHomePage } from '@/pages/owner/OwnerHomePage'
+import { VenueCreatePage } from '@/pages/owner/VenueCreatePage'
+import { VenueDetailPage } from '@/pages/owner/VenueDetailPage'
+import { VenueListPage } from '@/pages/owner/VenueListPage'
 import { HomePage } from '@/pages/public/HomePage'
 import { NotFoundPage } from '@/pages/public/NotFoundPage'
 import { GuestOnly, RequireAuth, RequireRole } from '@/routes/guards'
@@ -75,11 +81,81 @@ export function AppRouter() {
           }
         />
         <Route
+          path="/owner/venues"
+          element={
+            <RequireAuth>
+              <RequireRole role="owner">
+                <VenueListPage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/owner/venues/new"
+          element={
+            <RequireAuth>
+              <RequireRole role="owner">
+                <VenueCreatePage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/owner/venues/:venueId"
+          element={
+            <RequireAuth>
+              <RequireRole role="owner">
+                <VenueDetailPage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/owner/venues/:venueId/courts/new"
+          element={
+            <RequireAuth>
+              <RequireRole role="owner">
+                <CourtFormPage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/owner/venues/:venueId/courts/:courtId"
+          element={
+            <RequireAuth>
+              <RequireRole role="owner">
+                <CourtFormPage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
           path="/admin"
           element={
             <RequireAuth>
               <RequireRole role="admin">
                 <AdminHomePage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin/venues"
+          element={
+            <RequireAuth>
+              <RequireRole role="admin">
+                <AdminVenueListPage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin/venues/:venueId"
+          element={
+            <RequireAuth>
+              <RequireRole role="admin">
+                <AdminVenueDetailPage />
               </RequireRole>
             </RequireAuth>
           }

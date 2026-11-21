@@ -27,7 +27,8 @@ class LoginController extends Controller
             'password' => $request->string('password')->toString(),
         ];
 
-        if (! Auth::attempt($credentials)) {
+        // Selalu guard web. Request sebelumnya bisa meninggalkan guard sanctum di proses yang sama.
+        if (! Auth::guard('web')->attempt($credentials)) {
             throw ValidationException::withMessages([
                 'email' => 'Email atau password salah.',
             ]);

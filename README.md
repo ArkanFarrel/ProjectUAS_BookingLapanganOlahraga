@@ -61,6 +61,18 @@ php artisan app:create-admin
 
 Perintah ini menanyakan nama, email, dan password. Password tidak tampil di layar. Opsi `--name`, `--email`, dan `--password` hanya untuk skrip. Login memakai cookie session Sanctum, bukan token di `localStorage`.
 
+### 5. Data venue (Phase 4)
+Setelah migrate, isi kategori olahraga dan tautkan folder foto:
+
+```powershell
+cd backend
+php artisan migrate
+php artisan db:seed --class=SportSeeder
+php artisan storage:link
+```
+
+Pemilik venue menambah venue dan lapangan di aplikasi. Admin menyetujui venue dari menu Verifikasi. Mengubah jam buka per hari menyusul di fase berikutnya. Jam bawaan venue baru adalah 08.00-22.00.
+
 ## Testing & Verifikasi
 
 ```powershell

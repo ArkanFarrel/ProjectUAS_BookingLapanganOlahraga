@@ -22,7 +22,7 @@ export function SiteHeader() {
           SportsCourt
         </Link>
 
-        <nav aria-label="Akun" className="flex items-center gap-2">
+        <nav aria-label="Akun" className="flex flex-wrap items-center justify-end gap-2">
           {me.isPending ? (
             <span
               className="inline-block h-9 w-28 rounded-lg bg-slate-100"
@@ -39,6 +39,22 @@ export function SiteHeader() {
               >
                 Area saya
               </Link>
+              {me.data.role === 'owner' ? (
+                <Link
+                  to="/owner/venues"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                >
+                  Venue
+                </Link>
+              ) : null}
+              {me.data.role === 'admin' ? (
+                <Link
+                  to="/admin/venues"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+                >
+                  Verifikasi
+                </Link>
+              ) : null}
               <Link
                 to="/account"
                 className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"

@@ -26,7 +26,7 @@ class RegisterController extends Controller
             'status' => UserStatus::Active,
         ]);
 
-        Auth::login($user);
+        Auth::guard('web')->login($user);
         $request->session()->regenerate();
 
         return (new UserResource($user))->response()->setStatusCode(201);

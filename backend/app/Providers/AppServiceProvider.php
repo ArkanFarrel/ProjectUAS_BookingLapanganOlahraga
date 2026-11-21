@@ -44,5 +44,9 @@ class AppServiceProvider extends ServiceProvider
                     'message' => 'Terlalu banyak percobaan daftar. Coba lagi dalam satu menit.',
                 ], 429));
         });
+
+        RateLimiter::for('uploads', function (Request $request) {
+            return Limit::perMinute(20)->by($request->user()?->id ?: $request->ip());
+        });
     }
 }
