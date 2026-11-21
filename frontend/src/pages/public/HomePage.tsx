@@ -24,6 +24,12 @@ export function HomePage() {
             disetujui pemilik venue.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              to="/explore"
+              className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800"
+            >
+              Cari lapangan
+            </Link>
             {me.data ? (
               <Link
                 to={homePathForRole(me.data.role)}
@@ -35,7 +41,7 @@ export function HomePage() {
               <>
                 <Link
                   to="/register"
-                  className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800"
+                  className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
                 >
                   Daftar
                 </Link>

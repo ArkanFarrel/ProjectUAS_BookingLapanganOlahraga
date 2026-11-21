@@ -2,6 +2,7 @@ import { FormBanner } from '@/components/auth/FormBanner'
 import { SubmitButton } from '@/components/auth/SubmitButton'
 import { TextField } from '@/components/auth/TextField'
 import { AppShell } from '@/components/layout/AppShell'
+import { BlockEditor } from '@/pages/owner/BlockEditor'
 import { apiErrorMessage } from '@/features/auth/formErrors'
 import {
   createCourt,
@@ -163,6 +164,8 @@ export function CourtFormPage() {
           pendingLabel="Menyimpan..."
         />
       </form>
+
+      {court ? <BlockEditor courtId={court.id} /> : null}
 
       {court ? (
         <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">

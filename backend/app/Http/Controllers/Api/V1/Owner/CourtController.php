@@ -9,6 +9,7 @@ use App\Http\Requests\Owner\StoreCourtRequest;
 use App\Http\Requests\Owner\StoreImageRequest;
 use App\Http\Requests\Owner\UpdateCourtRequest;
 use App\Http\Resources\CourtResource;
+use App\Models\Booking;
 use App\Models\Court;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
@@ -111,7 +112,18 @@ class CourtController extends Controller
             return $blocked;
         }
 
-        // Sama seperti venue: cek booking aktif menyusul saat tabel bookings ada.
+        $busy = Booking::query()
+            ->holdingSlot()
+            ->where('court_id', $court->id)
+            ->where('end_at', '>', now())
+            ->exists();
+
+        if ($busy) {
+            return response()->json([
+                'message' => 'Masih ada booking aktif pada lapangan ini.',
+            ], 409);
+        }
+
         $court->delete();
 
         return response()->noContent();

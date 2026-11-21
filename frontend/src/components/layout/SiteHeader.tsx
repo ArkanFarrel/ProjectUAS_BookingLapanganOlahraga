@@ -23,6 +23,12 @@ export function SiteHeader() {
         </Link>
 
         <nav aria-label="Akun" className="flex flex-wrap items-center justify-end gap-2">
+          <Link
+            to="/explore"
+            className="rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+          >
+            Cari
+          </Link>
           {me.isPending ? (
             <span
               className="inline-block h-9 w-28 rounded-lg bg-slate-100"

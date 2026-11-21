@@ -71,7 +71,7 @@ php artisan db:seed --class=SportSeeder
 php artisan storage:link
 ```
 
-Pemilik venue menambah venue dan lapangan di aplikasi. Admin menyetujui venue dari menu Verifikasi. Mengubah jam buka per hari menyusul di fase berikutnya. Jam bawaan venue baru adalah 08.00-22.00.
+Pemilik venue menambah venue dan lapangan di aplikasi. Admin menyetujui venue dari menu Verifikasi. Jam bawaan venue baru adalah 08.00-22.00, dan pemilik bisa mengubahnya per hari. Pelanggan mencari venue lewat menu Cari.
 
 ## Testing & Verifikasi
 

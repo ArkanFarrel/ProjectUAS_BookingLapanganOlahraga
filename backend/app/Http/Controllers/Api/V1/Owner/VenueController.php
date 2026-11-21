@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\Concerns\ResolvesOwnedVenue;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Owner\VenueRequest;
 use App\Http\Resources\VenueResource;
+use App\Models\Booking;
 use App\Models\Venue;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -88,12 +89,23 @@ class VenueController extends Controller
         return new VenueResource($venue->load(['images', 'courts.sport']));
     }
 
-    public function destroy(Request $request, Venue $venue): Response
+    public function destroy(Request $request, Venue $venue): Response|JsonResponse
     {
         $venue = $this->ownedVenue($request, $venue);
 
-        // Booking belum ada di fase ini. Saat tabel bookings ada, hapus harus ditolak
-        // jika masih ada booking aktif yang akan datang.
+        $courtIds = $venue->courts()->pluck('id');
+        $busy = Booking::query()
+            ->holdingSlot()
+            ->whereIn('court_id', $courtIds)
+            ->where('end_at', '>', now())
+            ->exists();
+
+        if ($busy) {
+            return response()->json([
+                'message' => 'Masih ada booking aktif. Selesaikan atau batalkan dulu sebelum menghapus venue.',
+            ], 409);
+        }
+
         $venue->delete();
 
         return response()->noContent();

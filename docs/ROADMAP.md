@@ -1,6 +1,6 @@
 # SportsCourt — Implementation Roadmap
 
-Status: **Phase 4 selesai.** Phase 5 siap dimulai setelah konfirmasi.
+Status: **Phase 5 selesai.** Phase 6 siap dimulai setelah konfirmasi.
 
 ```mermaid
 flowchart LR
@@ -13,7 +13,7 @@ flowchart LR
 | **2. Project Initialization** ✅ | Cek versi PHP/Composer/Node/npm/MariaDB; `backend/` Laravel; `frontend/` Vite React TS + Tailwind; `.env.example`, `README.md`, `AGENTS.md`; DB `sportscourt` & `sportscourt_test` | `php artisan migrate:fresh` (tabel bawaan) & `php artisan test` sukses; `npm run typecheck`, `npm run lint`, `npm run build` sukses; kedua server diuji berjalan terpisah (catatan: root `.gitignore` dilewati karena permission denied, coverage ditangani `backend/.gitignore` & `frontend/.gitignore`) |
 | **3. Auth & Authorization** ✅ | Migration `users` (role, status, phone); Sanctum SPA, CORS, CSRF; register/login/logout/me/profile/password; `EnsureRole`, cek suspended; `app:create-admin`; halaman login/register/akun + guard UX | Feature test auth, role, throttle, suspended lulus (25 test, MariaDB `sportscourt_test`). Login, logout, dan simpan profil dicek di browser localhost tanpa 419. |
 | **4. Venue & Court Management** ✅ | Migration `sports`, `venues`, `venue_images`, `operating_hours`, `courts`; seeder sports; owner CRUD; admin verification; upload aman; halaman owner & admin terkait | Test ownership/IDOR (owner A vs B), transisi status venue, dan validasi upload lulus di MariaDB `sportscourt_test`. Jam operasional bisa diubah di fase 5. |
-| **5. Discovery & Availability** | Listing/search/filter/pagination; detail venue; operating hours UI; `court_blocks`; `AvailabilityService` + endpoint; halaman explore & detail | Unit test availability (jam tutup, blok, booking, past, timezone WITA/WIT); tidak ada N+1 (cek query log) |
+| **5. Discovery & Availability** ✅ | Listing/search/filter/pagination; detail venue; operating hours UI; `court_blocks`; `AvailabilityService` + endpoint; halaman explore & detail | Unit test availability (jam tutup, blok, booking, past, timezone WITA/WIT) lulus. Query log daftar venue tidak bertambah per venue. |
 | **6. Booking** | Migration `bookings`, `booking_status_histories`; `BookingService` (lock, harga, transisi); confirm/reject/cancel; scheduler expire & complete; halaman booking & my bookings & incoming bookings | Test overlap (termasuk batas `[start,end)`), state transition, cutoff cancel, expiry, **concurrent booking di MySQL/MariaDB** (tepat 1 sukses) |
 | **7. Dashboards** | Endpoint & halaman dashboard customer/owner/admin; admin users, sports, booking monitoring | Angka dashboard diverifikasi terhadap data seeder; test akses lintas role |
 | **8. Testing & Security Audit** | Full test suite; audit OWASP (access control, IDOR, injection, XSS, CSRF, session, CORS, upload, mass assignment, rate limit, dependency `composer audit` / `npm audit`); `SECURITY.md` | Laporan audit beserta temuan & perbaikan; semua test kritis hijau dan hasilnya terdokumentasi |

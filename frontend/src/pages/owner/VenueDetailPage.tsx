@@ -1,4 +1,5 @@
 import { AppShell } from '@/components/layout/AppShell'
+import { HoursEditor } from '@/pages/owner/HoursEditor'
 import { apiErrorMessage } from '@/features/auth/formErrors'
 import {
   deleteVenue,
@@ -8,12 +9,7 @@ import {
   updateVenue,
   uploadVenueImage,
 } from '@/features/venues/api'
-import {
-  dayNames,
-  formatIdr,
-  statusLabel,
-  type VenueInput,
-} from '@/features/venues/types'
+import { formatIdr, statusLabel, type VenueInput } from '@/features/venues/types'
 import { usePageTitle } from '@/lib/usePageTitle'
 import { VenueForm } from '@/pages/owner/VenueForm'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -227,18 +223,11 @@ export function VenueDetailPage() {
       <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
         <h2 className="text-lg font-semibold text-slate-900">Jam operasional</h2>
         <p className="mt-2 text-sm text-slate-600">
-          Jam bawaan 08.00-22.00 setiap hari. Mengubah jam per hari menyusul di fase berikutnya.
+          Jam ini waktu lokal venue. Booking yang sudah ada tidak dibatalkan kalau jam diubah.
         </p>
-        <ul className="mt-4 space-y-1 text-sm text-slate-800">
-          {current.operating_hours?.map((hour) => (
-            <li key={hour.day_of_week}>
-              {dayNames[hour.day_of_week]}:{' '}
-              {hour.is_closed || hour.open_hour === null || hour.close_hour === null
-                ? 'Tutup'
-                : `${String(hour.open_hour).padStart(2, '0')}.00-${String(hour.close_hour).padStart(2, '0')}.00`}
-            </li>
-          ))}
-        </ul>
+        {current.operating_hours ? (
+          <HoursEditor venueId={current.id} hours={current.operating_hours} />
+        ) : null}
       </section>
 
       <section className="mt-6">

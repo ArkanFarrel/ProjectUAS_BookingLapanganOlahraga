@@ -12,8 +12,10 @@ import { OwnerHomePage } from '@/pages/owner/OwnerHomePage'
 import { VenueCreatePage } from '@/pages/owner/VenueCreatePage'
 import { VenueDetailPage } from '@/pages/owner/VenueDetailPage'
 import { VenueListPage } from '@/pages/owner/VenueListPage'
+import { ExplorePage } from '@/pages/public/ExplorePage'
 import { HomePage } from '@/pages/public/HomePage'
 import { NotFoundPage } from '@/pages/public/NotFoundPage'
+import { VenuePublicPage } from '@/pages/public/VenuePublicPage'
 import { GuestOnly, RequireAuth, RequireRole } from '@/routes/guards'
 import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
@@ -36,6 +38,8 @@ export function AppRouter() {
       <AuthEvents />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/explore" element={<ExplorePage />} />
+        <Route path="/venues/:venueId" element={<VenuePublicPage />} />
         <Route
           path="/login"
           element={
