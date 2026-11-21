@@ -1,31 +1,90 @@
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
+import { setUnauthorizedHandler } from '@/lib/axios'
+import { AdminHomePage } from '@/pages/admin/AdminHomePage'
+import { AccountPage } from '@/pages/auth/AccountPage'
+import { ForbiddenPage } from '@/pages/auth/ForbiddenPage'
+import { LoginPage } from '@/pages/auth/LoginPage'
+import { RegisterPage } from '@/pages/auth/RegisterPage'
+import { CustomerHomePage } from '@/pages/customer/CustomerHomePage'
+import { OwnerHomePage } from '@/pages/owner/OwnerHomePage'
 import { HomePage } from '@/pages/public/HomePage'
+import { NotFoundPage } from '@/pages/public/NotFoundPage'
+import { GuestOnly, RequireAuth, RequireRole } from '@/routes/guards'
+import { useEffect } from 'react'
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 
-function NotFoundPage() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4 text-center">
-      <p className="text-sm font-semibold text-emerald-700">404</p>
-      <h1 className="mt-2 text-2xl font-bold text-slate-900">
-        Halaman tidak ditemukan
-      </h1>
-      <p className="mt-2 text-sm text-slate-600">
-        Tautan yang Anda buka tidak tersedia atau telah dipindahkan.
-      </p>
-      <Link
-        to="/"
-        className="mt-6 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-      >
-        Kembali ke Beranda
-      </Link>
-    </main>
-  )
+function AuthEvents() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      navigate('/login', { replace: true })
+    })
+  }, [navigate])
+
+  return null
 }
 
 export function AppRouter() {
   return (
     <BrowserRouter>
+      <AuthEvents />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route
+          path="/login"
+          element={
+            <GuestOnly>
+              <LoginPage />
+            </GuestOnly>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <GuestOnly>
+              <RegisterPage />
+            </GuestOnly>
+          }
+        />
+        <Route
+          path="/account"
+          element={
+            <RequireAuth>
+              <AccountPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/customer"
+          element={
+            <RequireAuth>
+              <RequireRole role="customer">
+                <CustomerHomePage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/owner"
+          element={
+            <RequireAuth>
+              <RequireRole role="owner">
+                <OwnerHomePage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <RequireAuth>
+              <RequireRole role="admin">
+                <AdminHomePage />
+              </RequireRole>
+            </RequireAuth>
+          }
+        />
+        <Route path="/forbidden" element={<ForbiddenPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

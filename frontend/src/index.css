@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+::selection {
+  background-color: #a7f3d0;
+  color: #064e3b;
+}
+
+input,
+textarea {
+  caret-color: #047857;
+}
+
+* {
+  scrollbar-color: #6ee7b7 transparent;
+}

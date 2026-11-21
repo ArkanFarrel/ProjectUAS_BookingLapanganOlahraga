@@ -1,69 +1,86 @@
-import { CalendarCheck, ShieldCheck, Search } from 'lucide-react'
+import { SiteHeader } from '@/components/layout/SiteHeader'
+import { useMe } from '@/features/auth/hooks'
+import { homePathForRole, roleLabel } from '@/features/auth/paths'
+import { usePageTitle } from '@/lib/usePageTitle'
+import { CalendarCheck, Search, ShieldCheck } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 export function HomePage() {
+  usePageTitle('Beranda')
+  const me = useMe()
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
-          <span className="text-xl font-bold tracking-tight text-emerald-700">
-            SportsCourt
-          </span>
-          {/* <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
-            Marketplace Booking Lapangan
-          </span> */}
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-20">
         <section className="max-w-3xl">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-            Temukan &amp; Pesan Lapangan Olahraga Secara Terstruktur
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+            Temukan dan pesan lapangan olahraga secara terstruktur
           </h1>
-          <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
-            SportsCourt menghubungkan pencari lapangan dengan berbagai pemilik
-            venue olahraga dalam satu platform. Cek ketersediaan jadwal, bandingkan
-            fasilitas, dan ajukan reservasi tanpa perlu konfirmasi manual yang
-            rumit.
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+            SportsCourt menghubungkan pencari lapangan dengan pemilik venue.
+            Cek ketersediaan, bandingkan fasilitas, lalu ajukan reservasi yang
+            disetujui pemilik venue.
           </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            {me.data ? (
+              <Link
+                to={homePathForRole(me.data.role)}
+                className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800"
+              >
+                Lanjut sebagai {roleLabel(me.data.role)}
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/register"
+                  className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800"
+                >
+                  Daftar
+                </Link>
+                <Link
+                  to="/login"
+                  className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                >
+                  Masuk
+                </Link>
+              </>
+            )}
+          </div>
         </section>
 
         <section className="mt-12 grid gap-6 sm:grid-cols-3">
-          <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-xs">
-            <Search className="h-6 w-6 text-emerald-600" aria-hidden="true" />
+          <article className="rounded-xl border border-slate-200 bg-white p-6">
+            <Search className="h-6 w-6 text-emerald-700" aria-hidden="true" />
             <h2 className="mt-4 text-base font-semibold text-slate-900">
-              Eksplorasi Multi-Venue
+              Eksplorasi multi-venue
             </h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Cari venue terverifikasi berdasarkan kota, jenis olahraga, dan jam
-              operasional yang jelas.
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              Cari venue yang sudah disetujui admin berdasarkan kota, jenis
+              olahraga, dan jam operasional.
             </p>
           </article>
 
-          <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-xs">
-            <CalendarCheck
-              className="h-6 w-6 text-emerald-600"
-              aria-hidden="true"
-            />
+          <article className="rounded-xl border border-slate-200 bg-white p-6">
+            <CalendarCheck className="h-6 w-6 text-emerald-700" aria-hidden="true" />
             <h2 className="mt-4 text-base font-semibold text-slate-900">
-              Jadwal Anti-Bentrok
+              Jadwal anti-bentrok
             </h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Slot waktu per jam dihitung real-time sesuai jam buka, jadwal
-              maintenance, dan reservasi aktif.
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              Slot per jam dihitung dari jam buka, jadwal yang diblokir, dan
+              reservasi yang masih aktif.
             </p>
           </article>
 
-          <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-xs">
-            <ShieldCheck
-              className="h-6 w-6 text-emerald-600"
-              aria-hidden="true"
-            />
+          <article className="rounded-xl border border-slate-200 bg-white p-6">
+            <ShieldCheck className="h-6 w-6 text-emerald-700" aria-hidden="true" />
             <h2 className="mt-4 text-base font-semibold text-slate-900">
-              Pengelolaan Terpusat
+              Pengelolaan venue
             </h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Pemilik venue mengelola lapangan, harga, blokir jadwal, dan
-              persetujuan booking dalam satu dashboard.
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              Pemilik mengelola lapangan dan menyetujui booking. Admin memeriksa
+              venue, bukan membuat akun lewat formulir publik.
             </p>
           </article>
         </section>

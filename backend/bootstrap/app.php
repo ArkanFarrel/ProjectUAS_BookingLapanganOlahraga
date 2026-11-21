@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\EnsureRole;
+use App\Http\Middleware\EnsureUserIsActive;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,7 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Cookie session + CSRF untuk SPA di localhost:5173. Bukan token di localStorage.
+        $middleware->statefulApi();
+        $middleware->throttleApi();
+        $middleware->alias([
+            'role' => EnsureRole::class,
+            'active' => EnsureUserIsActive::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

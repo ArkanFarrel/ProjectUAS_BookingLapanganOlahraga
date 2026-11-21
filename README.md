@@ -51,6 +51,16 @@ npm run dev
 ```
 Aplikasi tersedia di `http://localhost:5173` (wajib memakai `localhost`, jangan dicampur dengan `127.0.0.1`).
 
+### 4. Akun admin (Phase 3)
+Customer dan pemilik venue daftar lewat halaman web. Admin tidak bisa. Buat admin dari terminal backend:
+
+```powershell
+cd backend
+php artisan app:create-admin
+```
+
+Perintah ini menanyakan nama, email, dan password. Password tidak tampil di layar. Opsi `--name`, `--email`, dan `--password` hanya untuk skrip. Login memakai cookie session Sanctum, bukan token di `localStorage`.
+
 ## Testing & Verifikasi
 
 ```powershell
