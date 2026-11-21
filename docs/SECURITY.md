@@ -56,7 +56,7 @@ Login memakai `session()->regenerate()`. Logout memanggil `invalidate()` dan `re
 
 Cookie session `httponly` dan `samesite=lax`. `XSRF-TOKEN` sengaja tidak `httponly`, karena JavaScript harus membacanya untuk header CSRF. Itu pola Sanctum.
 
-`SESSION_SECURE_COOKIE=false` di contoh lokal. Cookie `secure` tidak terkirim lewat http, jadi localhost akan rusak kalau dipaksa true. Server HTTPS harus mengubahnya. Itu tugas Phase 9.
+`SESSION_SECURE_COOKIE=false` di contoh lokal. Cookie `secure` tidak terkirim lewat http, jadi localhost akan rusak kalau dipaksa true. Contoh untuk server HTTPS ada di `backend/.env.production.example` dan `docs/DEPLOY.md`.
 
 Saat `APP_DEBUG=true`, jawaban 419 menyertakan jejak file. Itu berguna di komputer lokal dan berbahaya di server sungguhan. `.env.example` sekarang mencatat bahwa production harus `APP_DEBUG=false`.
 
