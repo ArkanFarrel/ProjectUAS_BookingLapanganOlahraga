@@ -1,32 +1,54 @@
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { StatusPage } from '@/components/common/StatusPage'
+import { AppLayout } from '@/components/layout/AppLayout'
+import { ProfilePage } from '@/pages/account/ProfilePage'
+import { AdminDashboardPage } from '@/pages/admin/AdminDashboardPage'
+import { LoginPage } from '@/pages/auth/LoginPage'
+import { RegisterPage } from '@/pages/auth/RegisterPage'
+import { CustomerDashboardPage } from '@/pages/customer/CustomerDashboardPage'
+import { OwnerDashboardPage } from '@/pages/owner/OwnerDashboardPage'
 import { HomePage } from '@/pages/public/HomePage'
-
-function NotFoundPage() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-slate-50 px-4 text-center">
-      <p className="text-sm font-semibold text-emerald-700">404</p>
-      <h1 className="mt-2 text-2xl font-bold text-slate-900">
-        Halaman tidak ditemukan
-      </h1>
-      <p className="mt-2 text-sm text-slate-600">
-        Tautan yang Anda buka tidak tersedia atau telah dipindahkan.
-      </p>
-      <Link
-        to="/"
-        className="mt-6 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-      >
-        Kembali ke Beranda
-      </Link>
-    </main>
-  )
-}
+import { GuestOnly, RequireAuth } from '@/routes/guards'
 
 export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<HomePage />} />
+
+          <Route element={<GuestOnly />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
+
+          <Route element={<RequireAuth />}>
+            <Route path="/profile" element={<ProfilePage />} />
+          </Route>
+
+          <Route element={<RequireAuth roles={['customer']} />}>
+            <Route path="/dashboard" element={<CustomerDashboardPage />} />
+          </Route>
+
+          <Route element={<RequireAuth roles={['owner']} />}>
+            <Route path="/owner" element={<OwnerDashboardPage />} />
+          </Route>
+
+          <Route element={<RequireAuth roles={['admin']} />}>
+            <Route path="/admin" element={<AdminDashboardPage />} />
+          </Route>
+
+          <Route
+            path="*"
+            element={
+              <StatusPage
+                code="404"
+                title="Halaman tidak ditemukan"
+                description="Tautan yang Anda buka tidak tersedia atau telah dipindahkan."
+              />
+            }
+          />
+        </Route>
       </Routes>
     </BrowserRouter>
   )

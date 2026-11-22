@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\EnsureRole;
+use App\Http\Middleware\EnsureUserIsActive;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,7 +15,19 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Sanctum SPA: session + CSRF for requests from SANCTUM_STATEFUL_DOMAINS.
+        $middleware->statefulApi();
+        $middleware->throttleApi();
+
+        $middleware->alias([
+            'role' => EnsureRole::class,
+            'active' => EnsureUserIsActive::class,
+        ]);
+
+        // API has no login page: unauthenticated API requests get JSON 401 instead of a redirect.
+        $middleware->redirectGuestsTo(
+            fn (Request $request) => $request->is('api/*') ? null : '/login',
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
