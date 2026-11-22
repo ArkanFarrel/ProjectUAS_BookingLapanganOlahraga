@@ -175,7 +175,7 @@ Konfigurasi lokal (diverifikasi end-to-end di Phase 3):
 | `FRONTEND_URL` | `http://localhost:5173` |
 | `SANCTUM_STATEFUL_DOMAINS` | `localhost:5173` |
 | `SESSION_DRIVER` | `database` |
-| `SESSION_DOMAIN` | `localhost` |
+| `SESSION_DOMAIN` | `null` (host-only cookie untuk `localhost`) |
 | `SESSION_SECURE_COOKIE` | `false` (dev) / `true` (prod) |
 | `SESSION_SAME_SITE` | `lax` |
 | `SESSION_HTTP_ONLY` | `true` |

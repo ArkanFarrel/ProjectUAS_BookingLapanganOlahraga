@@ -8,8 +8,7 @@ Marketplace pemesanan lapangan olahraga multi-venue berbasis web (MVP v1.0).
 ProjectUAS/
 ├── frontend/   # React 19 + TypeScript + Vite 8 + Tailwind CSS v4
 ├── backend/    # Laravel 13 REST API (/api/v1) + MariaDB (InnoDB)
-├── docs/       # DECISIONS, ERD, ARCHITECTURE, API, ROADMAP
-├── prd.md      # Product Requirements Document & Master Prompt
+├── docs/       # PRD, DECISIONS, ERD, ARCHITECTURE, API, ROADMAP
 └── AGENTS.md   # Aturan engineering & verifikasi workspace
 ```
 
