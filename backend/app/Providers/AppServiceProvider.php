@@ -6,43 +6,51 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * Register any application services.
+     */
     public function register(): void
     {
         //
     }
 
+    /**
+     * Bootstrap any application services.
+     */
     public function boot(): void
     {
-        // Aturan password yang sama untuk register, ganti password, dan buat admin.
-        Password::defaults(fn () => Password::min(8)->letters()->numbers());
+        $this->configureRateLimiting();
+    }
+
+    private function configureRateLimiting(): void
+    {
+        $tooMany = static fn (string $message) => static function (Request $request, array $headers) use ($message) {
+            return response()->json([
+                'message' => $message,
+                'code' => 'TOO_MANY_REQUESTS',
+            ], 429, $headers);
+        };
 
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        // Kunci login memakai email + IP supaya satu orang tidak mengunci email orang lain.
-        RateLimiter::for('login', function (Request $request) {
-            $email = $request->input('email');
-            $emailKey = is_string($email) ? Str::lower($email) : 'invalid';
+        // 5 attempts per minute per (email + IP) — brute-force protection.
+        RateLimiter::for('login', function (Request $request) use ($tooMany) {
+            $email = mb_strtolower(trim((string) $request->input('email')));
 
             return Limit::perMinute(5)
-                ->by($emailKey.'|'.$request->ip())
-                ->response(fn () => response()->json([
-                    'message' => 'Terlalu banyak percobaan login. Coba lagi dalam satu menit.',
-                ], 429));
+                ->by($email.'|'.$request->ip())
+                ->response($tooMany('Terlalu banyak percobaan login. Silakan coba lagi dalam 1 menit.'));
         });
 
-        RateLimiter::for('register', function (Request $request) {
+        RateLimiter::for('register', function (Request $request) use ($tooMany) {
             return Limit::perMinute(5)
                 ->by($request->ip())
-                ->response(fn () => response()->json([
-                    'message' => 'Terlalu banyak percobaan daftar. Coba lagi dalam satu menit.',
-                ], 429));
+                ->response($tooMany('Terlalu banyak percobaan registrasi. Silakan coba lagi nanti.'));
         });
 
         RateLimiter::for('uploads', function (Request $request) {
@@ -51,6 +59,12 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('booking-create', function (Request $request) {
             return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('password', function (Request $request) use ($tooMany) {
+            return Limit::perMinute(5)
+                ->by((string) ($request->user()?->id ?: $request->ip()))
+                ->response($tooMany('Terlalu banyak percobaan ganti password. Silakan coba lagi nanti.'));
         });
     }
 }

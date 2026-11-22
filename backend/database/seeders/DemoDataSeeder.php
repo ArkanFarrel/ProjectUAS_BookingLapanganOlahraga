@@ -90,16 +90,17 @@ class DemoDataSeeder extends Seeder
 
     private function user(string $name, string $email, UserRole $role, string $phone): User
     {
-        return User::query()->updateOrCreate(
-            ['email' => $email],
-            [
-                'name' => $name,
-                'phone' => $phone,
-                'password' => 'Rahasia12',
-                'role' => $role,
-                'status' => UserStatus::Active,
-            ],
-        );
+        $user = User::query()->firstOrNew(['email' => $email]);
+        $user->fill([
+            'name' => $name,
+            'phone' => $phone,
+            'password' => 'Rahasia12',
+        ]);
+        $user->role = $role;
+        $user->status = UserStatus::Active;
+        $user->save();
+
+        return $user;
     }
 
     private function venue(User $owner, string $name, string $slug, VenueStatus $status, string $city): Venue
