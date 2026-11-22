@@ -83,7 +83,7 @@ export function CourtFormPage() {
   if (venue.isPending || sports.isPending) {
     return (
       <AppShell>
-        <p className="text-sm text-slate-700">Memuat formulir lapangan...</p>
+        <p className="text-sm text-ink-soft">Memuat formulir lapangan...</p>
       </AppShell>
     )
   }
@@ -91,8 +91,8 @@ export function CourtFormPage() {
   if (venue.isError || (courtId !== null && !court)) {
     return (
       <AppShell>
-        <h1 className="text-2xl font-semibold text-slate-900">Lapangan tidak ditemukan</h1>
-        <Link to="/owner/venues" className="mt-4 inline-flex text-sm font-medium text-emerald-800">
+        <h1 className="page-title">Lapangan tidak ditemukan</h1>
+        <Link to="/owner/venues" className="mt-4 inline-flex text-sm font-medium text-primary">
           Kembali ke venue
         </Link>
       </AppShell>
@@ -101,14 +101,14 @@ export function CourtFormPage() {
 
   return (
     <AppShell>
-      <Link to={`/owner/venues/${venueId}`} className="text-sm font-medium text-emerald-800">
+      <Link to={`/owner/venues/${venueId}`} className="text-sm font-medium text-primary">
         Kembali ke venue
       </Link>
-      <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900">
+      <h1 className="mt-3 page-title">
         {court ? 'Ubah lapangan' : 'Tambah lapangan'}
       </h1>
       <form
-        className="mt-6 space-y-5 rounded-2xl border border-slate-200 bg-white p-6"
+        className="mt-6 space-y-5 surface-card p-6"
         noValidate
         onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
       >
@@ -120,12 +120,12 @@ export function CourtFormPage() {
           error={form.formState.errors.name?.message}
         />
         <div>
-          <label htmlFor="sport_id" className="block text-sm font-medium text-slate-900">
+          <label htmlFor="sport_id" className="block text-sm font-medium text-ink">
             Olahraga
           </label>
           <select
             id="sport_id"
-            className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-base"
+            className="mt-1.5 w-full rounded-md border border-line bg-panel px-3 py-2.5.5 text-base"
             {...form.register('sport_id', { valueAsNumber: true })}
           >
             <option value={0}>Pilih olahraga</option>
@@ -136,17 +136,17 @@ export function CourtFormPage() {
             ))}
           </select>
           {form.formState.errors.sport_id ? (
-            <p className="mt-1.5 text-sm text-red-700">{form.formState.errors.sport_id.message}</p>
+            <p className="mt-1.5 text-sm text-taken">{form.formState.errors.sport_id.message}</p>
           ) : null}
         </div>
         <div>
-          <label htmlFor="court-description" className="block text-sm font-medium text-slate-900">
+          <label htmlFor="court-description" className="block text-sm font-medium text-ink">
             Deskripsi
           </label>
           <textarea
             id="court-description"
             rows={3}
-            className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-base"
+            className="mt-1.5 w-full rounded-lg border border-line px-3 py-2.5 text-base"
             {...form.register('description')}
           />
         </div>
@@ -165,15 +165,15 @@ export function CourtFormPage() {
         />
       </form>
 
-      {court ? <BlockEditor courtId={court.id} /> : null}
+      {court ? <div className="mt-6"><BlockEditor courtId={court.id} /></div> : null}
 
       {court ? (
-        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
-          <h2 className="text-lg font-semibold text-slate-900">Foto lapangan</h2>
+        <section className="mt-6 surface-card p-6">
+          <h2 className="section-title">Foto lapangan</h2>
           {court.image_url ? (
             <img src={court.image_url} alt="" className="mt-3 h-40 w-full rounded-xl object-cover" />
           ) : null}
-          <label className="mt-3 inline-flex cursor-pointer text-sm font-semibold text-emerald-800">
+          <label className="mt-3 inline-flex cursor-pointer text-sm font-semibold text-primary">
             {court.image_url ? 'Ganti foto' : 'Unggah foto'}
             <input
               type="file"
@@ -193,7 +193,7 @@ export function CourtFormPage() {
           <div className="mt-4 flex flex-wrap gap-4">
             <button
               type="button"
-              className="text-sm font-medium text-slate-800"
+              className="text-sm font-medium text-ink"
               onClick={() => {
                 setError(null)
                 void toggleCourtActive(court.id)
@@ -206,7 +206,7 @@ export function CourtFormPage() {
             {confirmDelete ? (
               <button
                 type="button"
-                className="text-sm font-semibold text-red-700"
+                className="text-sm font-semibold text-taken"
                 onClick={() => {
                   void deleteCourt(court.id)
                     .then(async () => {
@@ -219,7 +219,7 @@ export function CourtFormPage() {
                 Ya, hapus lapangan
               </button>
             ) : (
-              <button type="button" className="text-sm font-medium text-red-700" onClick={() => setConfirmDelete(true)}>
+              <button type="button" className="text-sm font-medium text-taken" onClick={() => setConfirmDelete(true)}>
                 Hapus lapangan
               </button>
             )}

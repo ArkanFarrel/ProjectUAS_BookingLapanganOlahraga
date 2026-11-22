@@ -19,7 +19,7 @@ export function LoadErrorScreen({ onRetry }: { onRetry: () => void }) {
     <div className="min-h-screen bg-paper">
       <SiteHeader />
       <main className="mx-auto max-w-xl px-4 py-16 sm:px-6">
-        <h1 className="font-display text-4xl text-ink">
+        <h1 className="section-title">
           Sesi tidak bisa dicek
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-ink-soft">
@@ -28,7 +28,7 @@ export function LoadErrorScreen({ onRetry }: { onRetry: () => void }) {
         <button
           type="button"
           onClick={onRetry}
-          className="mt-6 rounded-md bg-open px-4 py-2.5 text-sm font-semibold text-panel hover:bg-enamel"
+          className="mt-6 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-panel hover:bg-inverse"
         >
           Coba lagi
         </button>

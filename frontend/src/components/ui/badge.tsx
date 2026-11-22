@@ -5,7 +5,7 @@ const tones = {
   open: 'bg-open-soft text-open',
   wait: 'bg-wait-soft text-wait',
   taken: 'bg-taken-soft text-taken',
-  ink: 'bg-enamel text-paper',
+  ink: 'bg-inverse text-paper',
   quiet: 'bg-paper text-ink-soft',
 }
 

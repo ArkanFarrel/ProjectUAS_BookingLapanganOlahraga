@@ -6,18 +6,18 @@ export function NotFoundPage() {
   usePageTitle('Tidak ditemukan')
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-panel text-ink">
       <SiteHeader />
       <main className="mx-auto max-w-xl px-4 py-16 text-center sm:px-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+        <h1 className="page-title">
           Halaman tidak ditemukan
         </h1>
-        <p className="mt-3 text-sm leading-relaxed text-slate-700">
+        <p className="mt-3 text-sm leading-relaxed text-ink-soft">
           Tautan yang Anda buka tidak tersedia.
         </p>
         <Link
           to="/"
-          className="mt-6 inline-flex rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800"
+          className="mt-6 inline-flex rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary hover:bg-inverse"
         >
           Kembali ke beranda
         </Link>

@@ -1,3 +1,4 @@
+import { BookingBadge } from '@/components/common/StatusBadge'
 import { FormBanner } from '@/components/auth/FormBanner'
 import { AppShell } from '@/components/layout/AppShell'
 import { apiErrorMessage } from '@/features/auth/formErrors'
@@ -70,13 +71,13 @@ export function OwnerBookingsPage() {
 
   return (
     <AppShell>
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Booking masuk</h1>
-      <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-700">
+      <h1 className="page-title">Permintaan Booking Masuk</h1>
+      <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-soft">
         Konfirmasi atau tolak pengajuan yang masih menunggu. Pembatalan booking yang sudah dikonfirmasi wajib disertai alasan.
       </p>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-3">
-        <label className="text-sm text-slate-800">
+      <div className="surface-card mt-6 grid gap-3 p-4 sm:grid-cols-3">
+        <label className="text-sm text-ink">
           Venue
           <select
             value={venueId}
@@ -85,7 +86,7 @@ export function OwnerBookingsPage() {
               setCourtId('')
               setPage(1)
             }}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
+            className="mt-1 w-full rounded-md border border-line bg-panel px-3 py-2.5"
           >
             <option value="">Semua venue saya</option>
             {venues.data?.map((venue) => (
@@ -95,7 +96,7 @@ export function OwnerBookingsPage() {
             ))}
           </select>
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm text-ink">
           Lapangan
           <select
             value={courtId}
@@ -104,7 +105,7 @@ export function OwnerBookingsPage() {
               setPage(1)
             }}
             disabled={venueId === ''}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 disabled:bg-slate-100"
+            className="mt-1 w-full rounded-md border border-line bg-panel px-3 py-2.5 disabled:bg-panel"
           >
             <option value="">Semua lapangan</option>
             {venueDetail.data?.courts?.map((court) => (
@@ -114,7 +115,7 @@ export function OwnerBookingsPage() {
             ))}
           </select>
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm text-ink">
           Status
           <select
             value={status}
@@ -122,7 +123,7 @@ export function OwnerBookingsPage() {
               setStatus(event.target.value)
               setPage(1)
             }}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
+            className="mt-1 w-full rounded-md border border-line bg-panel px-3 py-2.5"
           >
             {statuses.map((item) => (
               <option key={item || 'all'} value={item}>
@@ -140,31 +141,31 @@ export function OwnerBookingsPage() {
       {list.isPending ? (
         <div className="mt-6 space-y-3" aria-busy="true">
           <p className="sr-only">Memuat booking...</p>
-          <div className="h-24 rounded-xl bg-slate-100" />
-          <div className="h-24 rounded-xl bg-slate-100" />
+          <div className="h-24 rounded-xl bg-panel" />
+          <div className="h-24 rounded-xl bg-panel" />
         </div>
       ) : null}
-      {list.isError ? <p className="mt-6 text-sm text-red-800">{apiErrorMessage(list.error, 'Booking gagal dimuat.')}</p> : null}
+      {list.isError ? <p className="mt-6 text-sm text-taken">{apiErrorMessage(list.error, 'Booking gagal dimuat.')}</p> : null}
       {list.data && list.data.data.length === 0 ? (
-        <p className="mt-6 text-sm text-slate-700">Belum ada booking pada filter ini.</p>
+        <p className="mt-6 text-sm text-ink-soft">Belum ada booking pada filter ini.</p>
       ) : null}
 
-      <ul className="mt-6 divide-y divide-slate-200 border-y border-slate-200">
+      <ul className="mt-6 space-y-3">
         {list.data?.data.map((booking) => (
-          <li key={booking.id} className="py-4">
+          <li key={booking.id} className="surface-card p-5">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <p className="font-medium text-slate-900">
+              <p className="text-base font-semibold text-ink">
                 {booking.venue.name} · {booking.court.name}
               </p>
-              <p className="text-sm font-medium text-slate-800">{statusLabel(booking.status)}</p>
+              <BookingBadge status={booking.status} />
             </div>
-            <p className="mt-1 text-sm text-slate-700">
-              {booking.code} · {booking.local.date} {booking.local.start}-{booking.local.end} · {formatIdr(booking.total_price)}
+            <p className="mt-1 text-sm text-ink-soft">
+              {booking.code} · {booking.local.date} {booking.local.start}–{booking.local.end} · {formatIdr(booking.total_price)}
             </p>
-            <p className="mt-1 text-sm text-slate-700">
+            <p className="mt-1 text-sm text-ink-soft">
               {booking.customer?.name ?? 'Pelanggan'} · {booking.customer?.phone || 'Telepon belum diisi'}
             </p>
-            {booking.notes ? <p className="mt-1 text-sm text-slate-600">{booking.notes}</p> : null}
+            {booking.notes ? <p className="mt-1 text-sm text-ink-soft">{booking.notes}</p> : null}
 
             {booking.status === 'pending' ? (
               <div className="mt-3 flex flex-wrap gap-2">
@@ -172,7 +173,7 @@ export function OwnerBookingsPage() {
                   type="button"
                   disabled={confirm.isPending}
                   onClick={() => confirm.mutate(booking)}
-                  className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-60"
+                  className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-on-primary hover:bg-inverse disabled:opacity-60"
                 >
                   Konfirmasi
                 </button>
@@ -183,7 +184,7 @@ export function OwnerBookingsPage() {
                     setReason('')
                     setActionError(null)
                   }}
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50"
+                  className="rounded-lg border border-line px-3 py-2 text-sm font-medium text-ink hover:bg-panel"
                 >
                   Tolak
                 </button>
@@ -198,7 +199,7 @@ export function OwnerBookingsPage() {
                   setReason('')
                   setActionError(null)
                 }}
-                className="mt-3 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50"
+                className="mt-3 rounded-lg border border-line px-3 py-2 text-sm font-medium text-ink hover:bg-panel"
               >
                 Batalkan
               </button>
@@ -220,7 +221,7 @@ export function OwnerBookingsPage() {
                   cancel.mutate(booking)
                 }}
               >
-                <label htmlFor={`owner-reason-${booking.id}`} className="block text-sm text-slate-800">
+                <label htmlFor={`owner-reason-${booking.id}`} className="block text-sm text-ink">
                   {reasonFor.action === 'cancel' ? 'Alasan batal (wajib)' : 'Alasan tolak (opsional)'}
                   <textarea
                     id={`owner-reason-${booking.id}`}
@@ -228,13 +229,13 @@ export function OwnerBookingsPage() {
                     onChange={(event) => setReason(event.target.value)}
                     maxLength={500}
                     rows={2}
-                    className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-line bg-panel px-3 py-2.5 text-sm"
                   />
                 </label>
                 <button
                   type="submit"
                   disabled={reject.isPending || cancel.isPending}
-                  className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-60"
+                  className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-on-primary hover:bg-inverse disabled:opacity-60"
                 >
                   {reasonFor.action === 'cancel' ? 'Simpan pembatalan' : 'Simpan penolakan'}
                 </button>
@@ -250,18 +251,18 @@ export function OwnerBookingsPage() {
             type="button"
             disabled={page <= 1}
             onClick={() => setPage((current) => current - 1)}
-            className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50"
+            className="rounded-lg border border-line px-3 py-2 disabled:opacity-50"
           >
             Sebelumnya
           </button>
-          <span className="text-slate-700">
+          <span className="text-ink-soft">
             Halaman {list.data.meta.current_page} dari {list.data.meta.last_page}
           </span>
           <button
             type="button"
             disabled={page >= list.data.meta.last_page}
             onClick={() => setPage((current) => current + 1)}
-            className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50"
+            className="rounded-lg border border-line px-3 py-2 disabled:opacity-50"
           >
             Berikutnya
           </button>

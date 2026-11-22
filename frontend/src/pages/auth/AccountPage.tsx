@@ -1,5 +1,5 @@
 import { FormBanner } from '@/components/auth/FormBanner'
-import { SubmitButton } from '@/components/auth/SubmitButton'
+import { Button } from '@/components/ui/button'
 import { TextField } from '@/components/auth/TextField'
 import { AppShell } from '@/components/layout/AppShell'
 import { applyFieldErrors, apiErrorMessage } from '@/features/auth/formErrors'
@@ -17,7 +17,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 export function AccountPage() {
-  usePageTitle('Akun')
+  usePageTitle('Pengaturan')
   const me = useMe()
   const updateProfile = useUpdateProfile()
   const updatePassword = useUpdatePassword()
@@ -79,106 +79,101 @@ export function AccountPage() {
   }
 
   return (
-    <AppShell>
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Akun</h1>
-      <p className="mt-2 text-sm leading-relaxed text-slate-600">
-        Email, peran, dan status akun diatur server. Dari halaman ini Anda hanya
-        bisa mengubah nama, nomor telepon, dan password.
-      </p>
-
-      <dl className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 sm:grid-cols-3">
+    <AppShell compact>
+      <h1 className="page-title">Pengaturan Akun</h1>
+      <dl className="surface-card mt-6 grid gap-4 p-5 sm:grid-cols-3 sm:p-6">
         <div>
-          <dt className="text-sm text-slate-600">Email</dt>
-          <dd className="mt-1 text-sm font-medium text-slate-900">{me.data.email}</dd>
+          <dt className="text-sm text-ink-soft">Email</dt>
+          <dd className="mt-1 text-sm font-medium text-ink">{me.data.email}</dd>
         </div>
         <div>
-          <dt className="text-sm text-slate-600">Peran</dt>
-          <dd className="mt-1 text-sm font-medium text-slate-900">{roleLabel(me.data.role)}</dd>
+          <dt className="text-sm text-ink-soft">Peran</dt>
+          <dd className="mt-1 text-sm font-medium text-ink">{roleLabel(me.data.role)}</dd>
         </div>
         <div>
-          <dt className="text-sm text-slate-600">Status</dt>
-          <dd className="mt-1 text-sm font-medium text-slate-900">{statusLabel(me.data.status)}</dd>
+          <dt className="text-sm text-ink-soft">Status</dt>
+          <dd className="mt-1 text-sm font-medium text-ink">{statusLabel(me.data.status)}</dd>
         </div>
       </dl>
 
       <form
-        className="mt-6 space-y-5 rounded-2xl border border-slate-200 bg-white p-6"
+        className="surface-card mt-6 space-y-5 p-5 sm:p-6"
         onSubmit={(event) => void profileForm.handleSubmit(onProfile)(event)}
         noValidate
       >
-        <h2 className="text-lg font-semibold text-slate-900">Profil</h2>
+        <h2 className="section-title">Informasi Akun</h2>
         <FormBanner message={profileError} />
         {profileMessage ? (
-          <p role="status" className="text-sm text-emerald-800">
+          <p role="status" className="text-sm text-primary">
             {profileMessage}
           </p>
         ) : null}
-        <TextField
-          id="name"
-          label="Nama"
-          autoComplete="name"
-          registration={profileForm.register('name')}
-          error={profileForm.formState.errors.name?.message}
-        />
-        <TextField
-          id="phone"
-          label="Nomor telepon"
-          type="tel"
-          autoComplete="tel"
-          inputMode="tel"
-          registration={profileForm.register('phone')}
-          error={profileForm.formState.errors.phone?.message}
-          hint="Opsional. Contoh 081234567890."
-        />
-        <SubmitButton
-          pending={updateProfile.isPending}
-          idleLabel="Simpan profil"
-          pendingLabel="Menyimpan..."
-        />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <TextField
+            id="name"
+            label="Nama"
+            autoComplete="name"
+            registration={profileForm.register('name')}
+            error={profileForm.formState.errors.name?.message}
+          />
+          <TextField
+            id="phone"
+            label="Nomor telepon"
+            type="tel"
+            autoComplete="tel"
+            inputMode="tel"
+            registration={profileForm.register('phone')}
+            error={profileForm.formState.errors.phone?.message}
+            hint="Opsional. Contoh 081234567890."
+          />
+        </div>
+        <Button type="submit" disabled={updateProfile.isPending}>
+          {updateProfile.isPending ? 'Menyimpan...' : 'Simpan Perubahan'}
+        </Button>
       </form>
 
       <form
-        className="mt-6 space-y-5 rounded-2xl border border-slate-200 bg-white p-6"
+        className="surface-card mt-6 space-y-5 p-5 sm:p-6"
         onSubmit={(event) => void passwordForm.handleSubmit(onPassword)(event)}
         noValidate
       >
-        <h2 className="text-lg font-semibold text-slate-900">Ganti password</h2>
+        <h2 className="section-title">Keamanan &amp; Kata Sandi</h2>
         <FormBanner message={passwordError} />
         {passwordMessage ? (
-          <p role="status" className="text-sm text-emerald-800">
+          <p role="status" className="text-sm text-primary">
             {passwordMessage}
           </p>
         ) : null}
-        <TextField
-          id="current_password"
-          label="Password saat ini"
-          type="password"
-          autoComplete="current-password"
-          registration={passwordForm.register('current_password')}
-          error={passwordForm.formState.errors.current_password?.message}
-        />
-        <TextField
-          id="new_password"
-          label="Password baru"
-          type="password"
-          autoComplete="new-password"
-          registration={passwordForm.register('password')}
-          error={passwordForm.formState.errors.password?.message}
-          hint="Minimal 8 karakter, wajib ada huruf dan angka."
-        />
-        <TextField
-          id="new_password_confirmation"
-          label="Ulangi password baru"
-          type="password"
-          autoComplete="new-password"
-          registration={passwordForm.register('password_confirmation')}
-          error={passwordForm.formState.errors.password_confirmation?.message}
-        />
-        <SubmitButton
-          pending={updatePassword.isPending}
-          idleLabel="Simpan password"
-          pendingLabel="Menyimpan..."
-        />
+        <div className="grid gap-4 sm:grid-cols-3">
+          <TextField
+            id="current_password"
+            label="Password saat ini"
+            type="password"
+            autoComplete="current-password"
+            registration={passwordForm.register('current_password')}
+            error={passwordForm.formState.errors.current_password?.message}
+          />
+          <TextField
+            id="new_password"
+            label="Password baru"
+            type="password"
+            autoComplete="new-password"
+            registration={passwordForm.register('password')}
+            error={passwordForm.formState.errors.password?.message}
+            hint="Minimal 8 karakter, wajib ada huruf dan angka."
+          />
+          <TextField
+            id="new_password_confirmation"
+            label="Ulangi password baru"
+            type="password"
+            autoComplete="new-password"
+            registration={passwordForm.register('password_confirmation')}
+            error={passwordForm.formState.errors.password_confirmation?.message}
+          />
+        </div>
+        <Button type="submit" disabled={updatePassword.isPending}>
+          {updatePassword.isPending ? 'Menyimpan...' : 'Simpan Kata Sandi'}
+        </Button>
       </form>
     </AppShell>
   )

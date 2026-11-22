@@ -46,7 +46,7 @@ export function AdminVenueDetailPage() {
   if (venue.isPending) {
     return (
       <AppShell>
-        <p className="text-sm text-slate-700">Memuat venue...</p>
+        <p className="text-sm text-ink-soft">Memuat venue...</p>
       </AppShell>
     )
   }
@@ -54,8 +54,8 @@ export function AdminVenueDetailPage() {
   if (venue.isError || !venue.data) {
     return (
       <AppShell>
-        <h1 className="text-2xl font-semibold text-slate-900">Venue tidak ditemukan</h1>
-        <Link to="/admin/venues" className="mt-4 inline-flex text-sm font-medium text-emerald-800">
+        <h1 className="page-title">Venue tidak ditemukan</h1>
+        <Link to="/admin/venues" className="mt-4 inline-flex text-sm font-medium text-primary">
           Kembali ke daftar
         </Link>
       </AppShell>
@@ -66,55 +66,55 @@ export function AdminVenueDetailPage() {
 
   return (
     <AppShell>
-      <Link to="/admin/venues" className="text-sm font-medium text-emerald-800">
+      <Link to="/admin/venues" className="text-sm font-medium text-primary">
         Kembali ke daftar
       </Link>
-      <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900">{current.name}</h1>
-      <p className="mt-2 text-sm text-slate-600">{statusLabel(current.status)}</p>
+      <h1 className="mt-3 page-title">{current.name}</h1>
+      <p className="mt-2 text-sm text-ink-soft">{statusLabel(current.status)}</p>
       {current.status_reason ? (
-        <p className="mt-2 text-sm text-slate-700">Alasan terakhir: {current.status_reason}</p>
+        <p className="mt-2 text-sm text-ink-soft">Alasan terakhir: {current.status_reason}</p>
       ) : null}
 
-      <dl className="mt-6 grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 sm:grid-cols-2">
+      <dl className="mt-6 grid gap-4 surface-card p-6 sm:grid-cols-2">
         <div>
-          <dt className="text-sm text-slate-600">Pemilik</dt>
-          <dd className="mt-1 text-sm font-medium text-slate-900">
+          <dt className="text-sm text-ink-soft">Pemilik</dt>
+          <dd className="mt-1 text-sm font-medium text-ink">
             {current.owner?.name} · {current.owner?.email}
           </dd>
         </div>
         <div>
-          <dt className="text-sm text-slate-600">Lokasi</dt>
-          <dd className="mt-1 text-sm font-medium text-slate-900">
+          <dt className="text-sm text-ink-soft">Lokasi</dt>
+          <dd className="mt-1 text-sm font-medium text-ink">
             {current.address}, {current.city}, {current.province}
           </dd>
         </div>
         <div>
-          <dt className="text-sm text-slate-600">Telepon</dt>
-          <dd className="mt-1 text-sm font-medium text-slate-900">{current.phone}</dd>
+          <dt className="text-sm text-ink-soft">Telepon</dt>
+          <dd className="mt-1 text-sm font-medium text-ink">{current.phone}</dd>
         </div>
         <div>
-          <dt className="text-sm text-slate-600">Zona waktu</dt>
-          <dd className="mt-1 text-sm font-medium text-slate-900">{current.timezone}</dd>
+          <dt className="text-sm text-ink-soft">Zona waktu</dt>
+          <dd className="mt-1 text-sm font-medium text-ink">{current.timezone}</dd>
         </div>
       </dl>
 
-      <p className="mt-6 max-w-2xl text-sm leading-relaxed text-slate-800">{current.description}</p>
+      <p className="mt-6 max-w-2xl text-sm leading-relaxed text-ink">{current.description}</p>
 
       {current.images && current.images.length > 0 ? (
         <ul className="mt-4 grid gap-3 sm:grid-cols-2">
           {current.images.map((image) => (
             <li key={image.id}>
-              <img src={image.url} alt="" className="h-36 w-full rounded-xl border border-slate-200 object-cover" />
+              <img src={image.url} alt="" className="h-36 w-full rounded-xl border border-line object-cover" />
             </li>
           ))}
         </ul>
       ) : (
-        <p className="mt-4 text-sm text-slate-600">Belum ada foto.</p>
+        <p className="mt-4 text-sm text-ink-soft">Belum ada foto.</p>
       )}
 
-      <h2 className="mt-8 text-lg font-semibold text-slate-900">Lapangan</h2>
+      <h2 className="mt-8 text-lg font-semibold text-ink">Lapangan</h2>
       {current.courts && current.courts.length > 0 ? (
-        <ul className="mt-2 space-y-2 text-sm text-slate-800">
+        <ul className="mt-2 space-y-2 text-sm text-ink">
           {current.courts.map((court) => (
             <li key={court.id}>
               {court.name} · {court.sport?.name} · {formatIdr(court.price_per_hour)} / jam
@@ -122,15 +122,15 @@ export function AdminVenueDetailPage() {
           ))}
         </ul>
       ) : (
-        <p className="mt-2 text-sm text-slate-600">Belum ada lapangan.</p>
+        <p className="mt-2 text-sm text-ink-soft">Belum ada lapangan.</p>
       )}
 
-      <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-6">
-        <h2 className="text-lg font-semibold text-slate-900">Keputusan</h2>
-        <p className="mt-2 text-sm text-slate-600">
+      <section className="mt-8 surface-card p-6">
+        <h2 className="section-title">Keputusan</h2>
+        <p className="mt-2 text-sm text-ink-soft">
           Tolak dan tangguhkan wajib punya alasan. Setujui hanya untuk venue yang masih menunggu.
         </p>
-        <label htmlFor="reason" className="mt-4 block text-sm font-medium text-slate-900">
+        <label htmlFor="reason" className="mt-4 block text-sm font-medium text-ink">
           Alasan
         </label>
         <textarea
@@ -138,9 +138,9 @@ export function AdminVenueDetailPage() {
           value={reason}
           onChange={(event) => setReason(event.target.value)}
           rows={3}
-          className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-base"
+          className="mt-1.5 w-full rounded-lg border border-line px-3 py-2.5 text-base"
         />
-        {error ? <p className="mt-3 text-sm text-red-700">{error}</p> : null}
+        {error ? <p className="mt-3 text-sm text-taken">{error}</p> : null}
         <div className="mt-4 flex flex-wrap gap-2">
           {current.status === 'pending_verification' ? (
             <>
@@ -148,7 +148,7 @@ export function AdminVenueDetailPage() {
                 type="button"
                 disabled={action.isPending}
                 onClick={() => void run('approve')}
-                className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-60"
+                className="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary hover:bg-inverse disabled:opacity-60"
               >
                 Setujui
               </button>
@@ -156,7 +156,7 @@ export function AdminVenueDetailPage() {
                 type="button"
                 disabled={action.isPending}
                 onClick={() => void run('reject')}
-                className="rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 disabled:opacity-60"
+                className="rounded-lg border border-line px-4 py-2.5 text-sm font-semibold text-ink disabled:opacity-60"
               >
                 Tolak
               </button>
@@ -167,7 +167,7 @@ export function AdminVenueDetailPage() {
               type="button"
               disabled={action.isPending}
               onClick={() => void run('suspend')}
-              className="rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 disabled:opacity-60"
+              className="rounded-lg border border-line px-4 py-2.5 text-sm font-semibold text-ink disabled:opacity-60"
             >
               Tangguhkan
             </button>
@@ -177,7 +177,7 @@ export function AdminVenueDetailPage() {
               type="button"
               disabled={action.isPending}
               onClick={() => void run('reactivate')}
-              className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-60"
+              className="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary hover:bg-inverse disabled:opacity-60"
             >
               Aktifkan kembali
             </button>

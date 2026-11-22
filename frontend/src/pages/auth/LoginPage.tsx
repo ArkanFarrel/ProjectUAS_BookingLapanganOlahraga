@@ -61,15 +61,12 @@ export function LoginPage() {
   }
 
   return (
-    <AuthLayout
-      panelTitle="Pesan lapangan, atau kelola venue Anda."
-      panelText="Pelanggan mengajukan reservasi. Pemilik venue menyetujui booking. Akun admin dibuat terpisah dan tidak lewat formulir ini."
-    >
+    <AuthLayout>
       <form className="space-y-5" onSubmit={(event) => void handleSubmit(onSubmit)(event)} noValidate>
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Masuk</h1>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            Gunakan email dan password akun SportsCourt.
+          <h1 className="page-title">Masuk ke SportsCourt</h1>
+          <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+            Masuk menggunakan email dan kata sandi akun Anda.
           </p>
         </div>
 
@@ -95,7 +92,7 @@ export function LoginPage() {
           />
           <button
             type="button"
-            className="mt-2 text-sm font-medium text-emerald-800 hover:text-emerald-950"
+            className="mt-2 text-sm font-medium text-primary hover:text-inverse"
             onClick={() => setShowPassword((current) => !current)}
           >
             {showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
@@ -104,13 +101,13 @@ export function LoginPage() {
 
         <SubmitButton
           pending={login.isPending}
-          idleLabel="Masuk"
+          idleLabel="Masuk Akun"
           pendingLabel="Masuk..."
         />
 
-        <p className="text-sm text-slate-600">
+        <p className="flex flex-wrap justify-between gap-2 border-t border-line pt-4 text-sm text-ink-soft">
           Belum punya akun?{' '}
-          <Link to="/register" className="font-semibold text-emerald-800 hover:text-emerald-950">
+          <Link to="/register" className="font-semibold text-primary hover:text-inverse">
             Daftar
           </Link>
         </p>

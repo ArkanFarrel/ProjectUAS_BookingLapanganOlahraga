@@ -1,9 +1,11 @@
+import { Button } from '@/components/ui/button'
+import { fieldClass } from '@/components/ui/field'
 import { apiErrorMessage } from '@/features/auth/formErrors'
 import { createBlock, deleteBlock, listBlocks } from '@/features/discovery/api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 
-export function BlockEditor({ courtId }: { courtId: number }) {
+export function BlockEditor({ courtId, courtPicker }: { courtId: number; courtPicker?: ReactNode }) {
   const queryClient = useQueryClient()
   const [date, setDate] = useState('')
   const [startHour, setStartHour] = useState(10)
@@ -23,11 +25,12 @@ export function BlockEditor({ courtId }: { courtId: number }) {
   })
 
   return (
-    <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
-      <h2 className="text-lg font-semibold text-slate-900">Blokir jadwal</h2>
-      <p className="mt-2 text-sm text-slate-600">
+    <section className="surface-card p-5 sm:p-6">
+      <h2 className="section-title">Blokir Jadwal Lapangan</h2>
+      <p className="mt-2 text-sm text-ink-soft">
         Jam mengikuti zona waktu venue. Blokir ditolak jika masih ada booking aktif di jam itu.
       </p>
+      {courtPicker}
       <form
         className="mt-4 grid gap-3 sm:grid-cols-2"
         onSubmit={(event) => {
@@ -38,38 +41,42 @@ export function BlockEditor({ courtId }: { courtId: number }) {
           })
         }}
       >
-        <label className="text-sm text-slate-800">
+        <label className="text-sm text-ink">
           Tanggal
-          <input type="date" required value={date} onChange={(event) => setDate(event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input type="date" required value={date} onChange={(event) => setDate(event.target.value)} className={fieldClass} />
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm text-ink">
           Alasan
-          <input required value={reason} onChange={(event) => setReason(event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input required value={reason} onChange={(event) => setReason(event.target.value)} className={fieldClass} />
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm text-ink">
           Jam mulai
-          <input type="number" min={0} max={23} value={startHour} onChange={(event) => setStartHour(Number(event.target.value))} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input type="number" min={0} max={23} value={startHour} onChange={(event) => setStartHour(Number(event.target.value))} className={fieldClass} />
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm text-ink">
           Jam selesai
-          <input type="number" min={1} max={24} value={endHour} onChange={(event) => setEndHour(Number(event.target.value))} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input type="number" min={1} max={24} value={endHour} onChange={(event) => setEndHour(Number(event.target.value))} className={fieldClass} />
         </label>
-        {error ? <p className="text-sm text-red-700 sm:col-span-2">{error}</p> : null}
-        <button type="submit" disabled={save.isPending} className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60 sm:col-span-2">
+        {error ? <p className="text-sm text-taken sm:col-span-2">{error}</p> : null}
+        <Button type="submit" disabled={save.isPending} className="sm:col-span-2">
           {save.isPending ? 'Menyimpan...' : 'Simpan blokir'}
-        </button>
+        </Button>
       </form>
-      <ul className="mt-4 space-y-2 text-sm text-slate-800">
+      {blocks.isError ? <p role="alert" className="mt-3 text-taken">{apiErrorMessage(blocks.error, 'Jadwal yang diblokir gagal dimuat.')}</p> : null}
+      <ul className="mt-4 divide-y divide-line text-sm text-ink">
         {blocks.data?.map((block) => (
-          <li key={block.id} className="flex items-center justify-between gap-3">
+          <li key={block.id} className="flex items-center justify-between gap-3 py-2.5">
             <span>
               {block.date} {String(block.start_hour).padStart(2, '0')}:00-{String(block.end_hour).padStart(2, '0')}:00 · {block.reason}
             </span>
             <button
               type="button"
-              className="text-red-700"
+              className="text-taken"
               onClick={() => {
-                void deleteBlock(block.id).then(() => queryClient.invalidateQueries({ queryKey: ['blocks', courtId] }))
+                setError(null)
+                void deleteBlock(block.id)
+                  .then(() => queryClient.invalidateQueries({ queryKey: ['blocks', courtId] }))
+                  .catch((caught: unknown) => setError(apiErrorMessage(caught, 'Blokir gagal dihapus.')))
               }}
             >
               Hapus
@@ -77,7 +84,7 @@ export function BlockEditor({ courtId }: { courtId: number }) {
           </li>
         ))}
       </ul>
-      {blocks.data && blocks.data.length === 0 ? <p className="mt-3 text-sm text-slate-600">Belum ada blokir.</p> : null}
+      {blocks.data && blocks.data.length === 0 ? <p className="mt-3 text-sm text-ink-soft">Belum ada blokir.</p> : null}
     </section>
   )
 }

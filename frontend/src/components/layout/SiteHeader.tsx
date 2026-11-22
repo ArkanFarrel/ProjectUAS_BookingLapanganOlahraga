@@ -1,14 +1,26 @@
+import { SiteBrand } from '@/components/layout/SiteBrand'
+import { Button } from '@/components/ui/button'
+import { buttonClass, buttonTones } from '@/components/ui/buttonStyles'
 import { useLogout, useMe } from '@/features/auth/hooks'
-import { homePathForRole } from '@/features/auth/paths'
+import { homePathForRole, roleLabel } from '@/features/auth/paths'
 import { cn } from '@/lib/cn'
-import { Link, useNavigate } from 'react-router-dom'
+import type { UserRole } from '@/types/user'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 
-const linkClass = 'inline-flex min-h-11 items-center rounded-md px-3 text-base font-semibold text-paper/90 hover:bg-white/10 hover:text-paper'
+const links = {
+  guest: [['/explore', 'Jelajah']],
+  customer: [['/explore', 'Jelajah'], ['/customer/bookings', 'Jadwal'], ['/customer', 'Profil'], ['/account', 'Pengaturan']],
+  owner: [['/owner', 'Dashboard'], ['/owner/venues', 'Venue & Court'], ['/owner/bookings', 'Pesanan Masuk'], ['/account', 'Pengaturan']],
+  admin: [['/admin', 'Dashboard'], ['/admin/venues', 'Verifikasi Venue'], ['/admin/sports', 'Kategori'], ['/admin/users', 'Pengguna'], ['/admin/bookings', 'Booking'], ['/account', 'Pengaturan']],
+} satisfies Record<UserRole | 'guest', string[][]>
 
 export function SiteHeader() {
   const me = useMe()
   const logout = useLogout()
+  const location = useLocation()
   const navigate = useNavigate()
+  const role = me.data?.role
+  const portal = role === 'owner' || role === 'admin'
 
   async function handleLogout() {
     await logout.mutateAsync()
@@ -16,66 +28,54 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="bg-enamel text-paper">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <Link to="/" className="inline-flex min-h-11 items-center font-display text-3xl leading-none text-lamp">
-          SportsCourt
-        </Link>
-
-        <nav aria-label="Akun" className="flex flex-wrap items-center justify-end gap-1">
-          <Link to="/explore" className={linkClass}>
-            Cari
-          </Link>
-          {me.isPending ? <span className="inline-block h-9 w-24 rounded-md bg-enamel-2" aria-hidden="true" /> : null}
-          {me.data ? (
-            <>
-              <span className="hidden max-w-40 truncate px-2 text-sm text-paper/80 sm:inline">{me.data.name}</span>
-              <Link to={homePathForRole(me.data.role)} className={linkClass}>
-                Area saya
-              </Link>
-              {me.data.role === 'customer' ? (
-                <Link to="/customer/bookings" className={linkClass}>
-                  Booking
-                </Link>
-              ) : null}
-              {me.data.role === 'owner' ? (
-                <Link to="/owner/bookings" className={linkClass}>
-                  Booking
-                </Link>
-              ) : null}
-              {me.data.role === 'owner' ? (
-                <Link to="/owner/venues" className={linkClass}>
-                  Venue
-                </Link>
-              ) : null}
-              {me.data.role === 'admin' ? (
-                <Link to="/admin/venues" className={linkClass}>
-                  Verifikasi
-                </Link>
-              ) : null}
-              <Link to="/account" className={linkClass}>
-                Akun
-              </Link>
-              <button
-                type="button"
-                onClick={() => void handleLogout()}
-                disabled={logout.isPending}
-                className={cn(linkClass, 'disabled:opacity-60')}
+    <header className="sticky top-0 z-30 border-b border-line bg-surface">
+      <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-5 gap-y-1 px-4 py-2.5 sm:px-8 lg:py-3">
+        <div className="flex items-center gap-2.5">
+          <SiteBrand to={portal ? homePathForRole(role) : '/'} />
+          {portal ? (
+            <span className="hidden rounded-full bg-primary-soft px-2.5 py-1 text-xs font-medium text-primary sm:inline">
+              {roleLabel(role)}
+            </span>
+          ) : null}
+        </div>
+        <nav aria-label="Navigasi utama" className="order-last flex w-full flex-wrap items-center gap-x-3 sm:gap-x-5 lg:order-none lg:w-auto">
+          {links[role ?? 'guest'].map(([path, label]) => {
+            const discovery = path === '/explore'
+            const onDiscovery = discovery && (location.pathname === '/' || location.pathname.startsWith('/venues/'))
+            return (
+              <NavLink
+                key={path}
+                to={path}
+                end={path === '/customer' || path === '/owner' || path === '/admin'}
+                aria-current={onDiscovery ? 'page' : undefined}
+                className={({ isActive }) => cn(
+                  'inline-flex min-h-9 items-center border-b-2 pt-0.5 text-sm font-medium transition-colors hover:text-primary',
+                  isActive || onDiscovery ? 'border-primary font-semibold text-primary' : 'border-transparent text-ink-soft',
+                )}
               >
-                {logout.isPending ? 'Keluar...' : 'Keluar'}
-              </button>
-            </>
+                {label}
+              </NavLink>
+            )
+          })}
+          {portal ? <Link to="/explore" className="text-sm font-medium text-ink-soft hover:text-primary">Jelajah</Link> : null}
+        </nav>
+        <div className="flex items-center gap-2">
+          {role === 'owner' ? (
+            <Link to="/owner/venues/new" className={cn(buttonClass, buttonTones.open, 'hidden sm:inline-flex')}>
+              Tambah Venue
+            </Link>
+          ) : null}
+          {role ? (
+            <Button tone="ghost" onClick={() => void handleLogout()} disabled={logout.isPending}>
+              {logout.isPending ? 'Keluar...' : 'Keluar'}
+            </Button>
           ) : me.isPending ? null : (
             <>
-              <Link to="/login" className={linkClass}>
-                Masuk
-              </Link>
-              <Link to="/register" className="inline-flex min-h-11 items-center rounded-md bg-lamp px-3 text-base font-semibold text-ink hover:bg-wait-soft">
-                Daftar
-              </Link>
+              <Link to="/login" className={cn(buttonClass, buttonTones.ghost)}>Masuk</Link>
+              <Link to="/register" className={cn(buttonClass, buttonTones.open)}>Daftar</Link>
             </>
           )}
-        </nav>
+        </div>
       </div>
     </header>
   )

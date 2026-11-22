@@ -1,3 +1,4 @@
+import { BookingBadge } from '@/components/common/StatusBadge'
 import { AppShell } from '@/components/layout/AppShell'
 import { listAdminBookings } from '@/features/admin/api'
 import { apiErrorMessage } from '@/features/auth/formErrors'
@@ -31,16 +32,16 @@ export function AdminBookingsPage() {
 
   return (
     <AppShell>
-      <Link to="/admin" className="text-sm font-medium text-emerald-800">
+      <Link to="/admin" className="text-sm font-medium text-primary">
         Kembali ke ringkasan
       </Link>
-      <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900">Pantau booking</h1>
-      <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-700">
+      <h1 className="mt-3 page-title">Pantau booking</h1>
+      <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-soft">
         Admin hanya melihat. Konfirmasi dan pembatalan tetap dilakukan pemilik venue atau pelanggan.
       </p>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <label className="text-sm text-slate-800">
+      <div className="surface-card mt-6 grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">
+        <label className="text-sm text-ink">
           Status
           <select
             value={status}
@@ -48,7 +49,7 @@ export function AdminBookingsPage() {
               setStatus(event.target.value as BookingStatus | '')
               setPage(1)
             }}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
+            className="mt-1 w-full rounded-md border border-line bg-panel px-3 py-2.5"
           >
             {statuses.map((item) => (
               <option key={item || 'all'} value={item}>
@@ -57,7 +58,7 @@ export function AdminBookingsPage() {
             ))}
           </select>
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm text-ink">
           ID venue
           <input
             value={venueId}
@@ -66,10 +67,10 @@ export function AdminBookingsPage() {
               setVenueId(event.target.value.replace(/\D/g, ''))
               setPage(1)
             }}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+            className="mt-1 w-full rounded-md border border-line bg-panel px-3 py-2.5"
           />
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm text-ink">
           Dari tanggal
           <input
             type="date"
@@ -78,10 +79,10 @@ export function AdminBookingsPage() {
               setDateFrom(event.target.value)
               setPage(1)
             }}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+            className="mt-1 w-full rounded-md border border-line bg-panel px-3 py-2.5"
           />
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm text-ink">
           Sampai tanggal
           <input
             type="date"
@@ -90,25 +91,26 @@ export function AdminBookingsPage() {
               setDateTo(event.target.value)
               setPage(1)
             }}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+            className="mt-1 w-full rounded-md border border-line bg-panel px-3 py-2.5"
           />
         </label>
       </div>
 
-      {bookings.isPending ? <p className="mt-6 text-sm text-slate-700">Memuat booking...</p> : null}
-      {bookings.isError ? <p className="mt-6 text-sm text-red-800">{apiErrorMessage(bookings.error, 'Booking gagal dimuat.')}</p> : null}
-      {bookings.data && bookings.data.data.length === 0 ? <p className="mt-6 text-sm text-slate-700">Tidak ada booking pada filter ini.</p> : null}
+      {bookings.isPending ? <p className="mt-6 text-sm text-ink-soft">Memuat booking...</p> : null}
+      {bookings.isError ? <p className="mt-6 text-sm text-taken">{apiErrorMessage(bookings.error, 'Booking gagal dimuat.')}</p> : null}
+      {bookings.data && bookings.data.data.length === 0 ? <p className="mt-6 text-sm text-ink-soft">Tidak ada booking pada filter ini.</p> : null}
 
-      <ul className="mt-6 divide-y divide-slate-200 border-y border-slate-200">
+      <ul className="mt-6 space-y-3">
         {bookings.data?.data.map((booking) => (
-          <li key={booking.id} className="py-3">
-            <Link to={`/admin/bookings/${booking.id}`} className="font-medium text-emerald-800">
-              {booking.code}
-            </Link>
-            <p className="mt-1 text-sm text-slate-800">
-              {booking.venue.name} · {booking.court.name} · {statusLabel(booking.status)}
+          <li key={booking.id} className="surface-card p-5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <Link to={`/admin/bookings/${booking.id}`} className="font-semibold text-primary hover:underline">{booking.code}</Link>
+              <BookingBadge status={booking.status} />
+            </div>
+            <p className="mt-1 text-sm text-ink">
+              {booking.venue.name} · {booking.court.name}
             </p>
-            <p className="mt-1 text-sm text-slate-700">
+            <p className="mt-1 text-sm text-ink-soft">
               {booking.local.date} {booking.local.start}-{booking.local.end} · {formatIdr(booking.total_price)} · {booking.customer?.name ?? 'Pelanggan'}
             </p>
           </li>
@@ -117,13 +119,13 @@ export function AdminBookingsPage() {
 
       {bookings.data && bookings.data.meta.last_page > 1 ? (
         <div className="mt-4 flex items-center gap-3 text-sm">
-          <button type="button" disabled={page <= 1} onClick={() => setPage((current) => current - 1)} className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50">
+          <button type="button" disabled={page <= 1} onClick={() => setPage((current) => current - 1)} className="rounded-lg border border-line px-3 py-2 disabled:opacity-50">
             Sebelumnya
           </button>
-          <span className="text-slate-700">
+          <span className="text-ink-soft">
             Halaman {bookings.data.meta.current_page} dari {bookings.data.meta.last_page}
           </span>
-          <button type="button" disabled={page >= bookings.data.meta.last_page} onClick={() => setPage((current) => current + 1)} className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50">
+          <button type="button" disabled={page >= bookings.data.meta.last_page} onClick={() => setPage((current) => current + 1)} className="rounded-lg border border-line px-3 py-2 disabled:opacity-50">
             Berikutnya
           </button>
         </div>

@@ -1,24 +1,29 @@
-import { CourtArt } from '@/components/common/CourtArt'
+import { VenueCover } from '@/components/common/VenueCover'
 import { AppShell } from '@/components/layout/AppShell'
 import { Button } from '@/components/ui/button'
+import { buttonClass, buttonTones } from '@/components/ui/buttonStyles'
 import { fieldClass } from '@/components/ui/field'
 import { apiErrorMessage } from '@/features/auth/formErrors'
 import { exploreVenues, type ExploreFilters } from '@/features/discovery/api'
 import { listSports } from '@/features/venues/api'
 import { formatIdr } from '@/features/venues/types'
+import { cn } from '@/lib/cn'
 import { usePageTitle } from '@/lib/usePageTitle'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
+import { ArrowRight, MapPin, Search, SlidersHorizontal } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 
-// Hasil pencarian hanya venue yang sudah disetujui dan masih aktif.
+type FilterField = 'q' | 'city' | 'min_price' | 'max_price'
+const searchFields: { name: FilterField; label: string; placeholder?: string }[] = [
+  { name: 'q', label: 'Nama venue', placeholder: 'Cari nama venue' },
+  { name: 'city', label: 'Kota', placeholder: 'Semua kota' },
+  { name: 'min_price', label: 'Harga minimum', placeholder: 'Rp minimum' },
+  { name: 'max_price', label: 'Harga maksimum', placeholder: 'Rp maksimum' },
+]
+
 export function ExplorePage() {
-  usePageTitle('Cari lapangan')
+  usePageTitle('Jelajah')
   const [params, setParams] = useSearchParams()
-  const [q, setQ] = useState(params.get('q') ?? '')
-  const [city, setCity] = useState(params.get('city') ?? '')
-  const [minPrice, setMinPrice] = useState(params.get('min_price') ?? '')
-  const [maxPrice, setMaxPrice] = useState(params.get('max_price') ?? '')
   const filters: ExploreFilters = {
     q: params.get('q') ?? '',
     city: params.get('city') ?? '',
@@ -29,177 +34,135 @@ export function ExplorePage() {
     page: Number(params.get('page') ?? '1'),
   }
   const sports = useQuery({ queryKey: ['sports'], queryFn: listSports })
-  const venues = useQuery({
-    queryKey: ['explore', filters],
-    queryFn: () => exploreVenues(filters),
-  })
+  const venues = useQuery({ queryKey: ['explore', filters], queryFn: () => exploreVenues(filters) })
 
-  function apply(next: URLSearchParams) {
-    next.delete('page')
+  const pagination = venues.data?.meta
+
+  function apply(values: Record<string, string>, resetPage = true) {
+    const next = new URLSearchParams(params)
+    if (resetPage) next.delete('page')
+    for (const [key, value] of Object.entries(values)) {
+      if (value.trim()) next.set(key, value.trim())
+      else next.delete(key)
+    }
     setParams(next)
   }
 
   return (
     <AppShell>
-      <h1 className="font-display text-5xl leading-none text-ink">Cari lapangan</h1>
-      <p className="mt-3 max-w-xl text-base leading-relaxed text-ink-soft">
-        Daftar ini hanya venue yang sudah disetujui admin dan pemiliknya masih aktif.
-      </p>
+      <header>
+        <h1 className="page-title">Temukan &amp; Pesan Lapangan Olahraga</h1>
+        <p className="mt-2 text-ink-soft">Bandingkan harga per jam dan cek jadwal lapangan di venue terverifikasi.</p>
+      </header>
 
       <form
-        className="mt-6 grid gap-3 rounded-lg border border-line bg-panel p-4 sm:grid-cols-2"
+        key={JSON.stringify(searchFields.map(({ name }) => filters[name]))}
+        aria-label="Pencarian dan filter venue"
+        className="surface-card mt-8 grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr_auto] lg:items-end"
         onSubmit={(event) => {
           event.preventDefault()
-          const next = new URLSearchParams(params)
-          const setOrDelete = (key: string, value: string) => {
-            if (value.trim()) next.set(key, value.trim())
-            else next.delete(key)
-          }
-          setOrDelete('q', q)
-          setOrDelete('city', city)
-          setOrDelete('min_price', minPrice)
-          setOrDelete('max_price', maxPrice)
-          apply(next)
+          const form = new FormData(event.currentTarget)
+          apply(Object.fromEntries(searchFields.map(({ name }) => [name, String(form.get(name) ?? '')])))
         }}
       >
-        <label className="text-sm font-medium text-ink">
-          Nama venue
-          <input value={q} onChange={(event) => setQ(event.target.value)} className={fieldClass} />
-        </label>
-        <label className="text-sm font-medium text-ink">
-          Kota
-          <input value={city} onChange={(event) => setCity(event.target.value)} className={fieldClass} />
-        </label>
-        <label className="text-sm font-medium text-ink">
-          Olahraga
-          <select
-            value={filters.sport}
-            onChange={(event) => {
-              const next = new URLSearchParams(params)
-              if (event.target.value) next.set('sport', event.target.value)
-              else next.delete('sport')
-              apply(next)
-            }}
-            className={fieldClass}
-          >
-            <option value="">Semua</option>
-            {sports.data?.map((sport) => (
-              <option key={sport.id} value={sport.slug}>
-                {sport.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="text-sm font-medium text-ink">
-          Urutan
-          <select
-            value={filters.sort}
-            onChange={(event) => {
-              const next = new URLSearchParams(params)
-              next.set('sort', event.target.value)
-              apply(next)
-            }}
-            className={fieldClass}
-          >
-            <option value="newest">Terbaru</option>
-            <option value="price_asc">Harga termurah</option>
-            <option value="price_desc">Harga termahal</option>
-            <option value="name">Nama</option>
-          </select>
-        </label>
-        <label className="text-sm font-medium text-ink">
-          Harga minimum
-          <input value={minPrice} onChange={(event) => setMinPrice(event.target.value)} inputMode="numeric" className={fieldClass} />
-        </label>
-        <label className="text-sm font-medium text-ink">
-          Harga maksimum
-          <input value={maxPrice} onChange={(event) => setMaxPrice(event.target.value)} inputMode="numeric" className={fieldClass} />
-        </label>
-        <Button type="submit" className="sm:col-span-2 sm:w-fit">
-          Terapkan filter
+        {searchFields.map(({ name, label, placeholder }) => (
+          <label key={name} className="min-w-0 text-xs font-medium text-ink">
+            {label}
+            <span className="relative block">
+              {name === 'q' ? <Search size={17} className="pointer-events-none absolute bottom-3 left-3 text-ink-soft" aria-hidden="true" /> : null}
+              <input
+                name={name}
+                defaultValue={filters[name]}
+                type={name === 'q' ? 'search' : 'text'}
+                inputMode={name === 'min_price' || name === 'max_price' ? 'numeric' : undefined}
+                placeholder={placeholder}
+                className={cn(fieldClass, name === 'q' && 'pl-9')}
+              />
+            </span>
+          </label>
+        ))}
+        <Button type="submit" tone="line" className="sm:w-fit lg:w-full">
+          <SlidersHorizontal size={16} className="text-primary" aria-hidden="true" /> Terapkan
         </Button>
       </form>
 
-      {venues.isPending ? <p className="mt-6 text-base text-ink">Mencari venue...</p> : null}
+      <section aria-label="Kategori olahraga" className="mt-8 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap gap-2">
+          <button type="button" aria-pressed={!filters.sport} onClick={() => apply({ sport: '' })} className="status-filter">Semua Olahraga</button>
+          {sports.data?.map((sport) => (
+            <button key={sport.id} type="button" aria-pressed={filters.sport === sport.slug} onClick={() => apply({ sport: sport.slug })} className="status-filter">
+              {sport.name}
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-wrap items-center gap-3 text-xs text-ink-soft">
+          {venues.data ? (
+            <span className="tabular-nums" role="status">{venues.data.data.length} dari {venues.data.meta.total} venue</span>
+          ) : null}
+          <label className="flex items-center gap-2">
+            Urutan
+            <select value={filters.sort} onChange={(event) => apply({ sort: event.target.value })} className="rounded-md border border-line bg-surface px-2.5 py-2 text-sm text-ink">
+              <option value="newest">Terbaru</option>
+              <option value="price_asc">Harga termurah</option>
+              <option value="price_desc">Harga termahal</option>
+              <option value="name">Nama</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      {venues.isPending ? <p className="mt-6 text-ink-soft" role="status">Mencari venue...</p> : null}
       {venues.isError ? (
-        <p className="mt-6 text-base text-taken">{apiErrorMessage(venues.error, 'Pencarian gagal. Periksa filter lalu coba lagi.')}</p>
-      ) : null}
-      {venues.data && venues.data.data.length === 0 ? (
-        <p className="mt-6 border-y-[3px] border-ink py-6 text-base text-ink">
-          Tidak ada venue yang cocok. Coba kota lain atau hapus filter harga.
+        <p className="mt-6 rounded-md bg-taken-soft p-4 text-taken" role="alert">
+          {apiErrorMessage(venues.error, 'Pencarian gagal. Periksa filter lalu coba lagi.')}
         </p>
       ) : null}
+      {venues.data?.data.length === 0 ? (
+        <p className="surface-card mt-6 p-6 text-ink-soft">Tidak ada venue yang cocok. Coba kota lain atau hapus filter harga.</p>
+      ) : null}
 
-      <ul className="mt-8 border-t-[3px] border-ink">
-        {venues.data?.data.map((venue, index) => (
-          <li key={venue.id} className={index === 0 ? 'border-b-[3px] border-ink' : 'border-b border-ink'}>
-            <Link
-              to={`/venues/${venue.id}`}
-              className={
-                index === 0
-                  ? 'grid min-h-44 gap-4 py-4 sm:grid-cols-12'
-                  : 'flex min-h-11 items-center gap-4 py-3'
-              }
-            >
-              {venue.cover_image_url ? (
-                <img
-                  src={venue.cover_image_url}
-                  alt=""
-                  className={index === 0 ? 'h-56 w-full object-cover sm:col-span-7' : 'h-14 w-20 object-cover'}
-                />
-              ) : (
-                <CourtArt
-                  name={venue.name}
-                  className={index === 0 ? 'h-56 w-full sm:col-span-7' : 'h-14 w-20'}
-                />
-              )}
-              <span className={index === 0 ? 'sm:col-span-5 sm:py-4' : 'min-w-0 flex-1'}>
-                <span className={index === 0 ? 'block font-display text-5xl leading-none text-ink' : 'block text-base font-semibold text-ink'}>
-                  {venue.name}
-                </span>
-                <span className="mt-1 block text-base text-ink">
-                  {venue.city}, {venue.province}
-                  {venue.starting_price ? ` · mulai ${formatIdr(venue.starting_price)}` : ''}
-                </span>
-                <span className="mt-1 block text-base text-ink">
-                  {venue.sports.map((sport) => sport.name).join(', ') || 'Belum ada lapangan'}
-                </span>
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {venues.data && venues.data.data.length > 0 ? (
+        <ul aria-label="Daftar venue terverifikasi" className="mt-5 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {venues.data.data.map((venue) => (
+            <li key={venue.id} className="surface-card flex flex-col overflow-hidden">
+              <div className="relative">
+                <VenueCover src={venue.cover_image_url} sports={venue.sports} className="aspect-video" />
+                {venue.sports.length > 0 ? (
+                  <span className="absolute top-3 left-3 max-w-[calc(100%-1.5rem)] rounded-full bg-primary-soft px-3 py-1 text-xs font-medium text-primary">
+                    {venue.sports.map((sport) => sport.name).join(' · ')}
+                  </span>
+                ) : null}
+              </div>
+              <div className="flex flex-1 flex-col gap-4 p-5">
+                <div className="flex-1">
+                  <h2 className="text-base font-semibold">{venue.name}</h2>
+                  <p className="mt-1 flex items-start gap-1.5 text-[13px] text-ink-soft">
+                    <MapPin size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
+                    {venue.city}, {venue.province}
+                  </p>
+                </div>
+                <p className="border-t border-line pt-3 text-sm font-semibold text-primary tabular-nums">
+                  {venue.starting_price ? `Mulai ${formatIdr(venue.starting_price)}/jam` : 'Harga belum tersedia'}
+                </p>
+                <Link to={`/venues/${venue.id}`} className={cn(buttonClass, buttonTones.open)} aria-label={`Lihat detail dan jadwal ${venue.name}`}>
+                  Lihat Detail &amp; Jadwal <ArrowRight size={15} aria-hidden="true" />
+                </Link>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : null}
 
-      {venues.data && venues.data.meta.last_page > 1 ? (
-        <div className="mt-4 flex items-center gap-3 text-sm">
-          <button
-            type="button"
-            disabled={(filters.page ?? 1) <= 1}
-            className="inline-flex min-h-11 items-center border border-ink px-3 text-base disabled:opacity-50"
-            onClick={() => {
-              const next = new URLSearchParams(params)
-              next.set('page', String((filters.page ?? 1) - 1))
-              setParams(next)
-            }}
-          >
+      {pagination && pagination.last_page > 1 ? (
+        <nav aria-label="Halaman hasil" className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5">
+          <Button tone="line" disabled={pagination.current_page <= 1} onClick={() => apply({ page: String(pagination.current_page - 1) }, false)}>
             Sebelumnya
-          </button>
-          <span>
-            Halaman {venues.data.meta.current_page} dari {venues.data.meta.last_page}
-          </span>
-          <button
-            type="button"
-            disabled={(filters.page ?? 1) >= venues.data.meta.last_page}
-            className="inline-flex min-h-11 items-center border border-ink px-3 text-base disabled:opacity-50"
-            onClick={() => {
-              const next = new URLSearchParams(params)
-              next.set('page', String((filters.page ?? 1) + 1))
-              setParams(next)
-            }}
-          >
+          </Button>
+          <span className="tabular-nums">Halaman {pagination.current_page} dari {pagination.last_page}</span>
+          <Button tone="line" disabled={pagination.current_page >= pagination.last_page} onClick={() => apply({ page: String(pagination.current_page + 1) }, false)}>
             Berikutnya
-          </button>
-        </div>
+          </Button>
+        </nav>
       ) : null}
     </AppShell>
   )

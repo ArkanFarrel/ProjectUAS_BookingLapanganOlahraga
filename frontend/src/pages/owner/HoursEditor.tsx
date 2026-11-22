@@ -41,9 +41,9 @@ export function HoursEditor({ venueId, hours }: HoursEditorProps) {
       }}
     >
       {days.map((day, index) => (
-        <div key={day.day_of_week} className="grid items-center gap-2 sm:grid-cols-[7rem_auto_1fr_1fr]">
-          <span className="text-sm font-medium text-slate-900">{dayNames[day.day_of_week]}</span>
-          <label className="flex items-center gap-2 text-sm text-slate-700">
+        <div key={day.day_of_week} className="grid grid-cols-[1fr_1fr] items-center gap-2 border-b border-line pb-3 sm:grid-cols-[4rem_auto_1fr_1fr]">
+          <span className="text-sm font-medium text-ink">{dayNames[day.day_of_week]}</span>
+          <label className="flex items-center gap-2 text-sm text-ink-soft">
             <input
               type="checkbox"
               checked={day.is_closed}
@@ -51,7 +51,7 @@ export function HoursEditor({ venueId, hours }: HoursEditorProps) {
             />
             Tutup
           </label>
-          <label className="text-sm text-slate-700">
+          <label className="text-sm text-ink-soft">
             Buka
             <input
               type="number"
@@ -60,10 +60,10 @@ export function HoursEditor({ venueId, hours }: HoursEditorProps) {
               disabled={day.is_closed}
               value={day.open_hour ?? ''}
               onChange={(event) => update(index, { open_hour: Number(event.target.value) })}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1 disabled:bg-slate-100"
+              className="mt-1 w-full rounded-md border border-line bg-panel px-2 py-1.5 disabled:opacity-50"
             />
           </label>
-          <label className="text-sm text-slate-700">
+          <label className="text-sm text-ink-soft">
             Tutup jam
             <input
               type="number"
@@ -72,17 +72,17 @@ export function HoursEditor({ venueId, hours }: HoursEditorProps) {
               disabled={day.is_closed}
               value={day.close_hour ?? ''}
               onChange={(event) => update(index, { close_hour: Number(event.target.value) })}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-2 py-1 disabled:bg-slate-100"
+              className="mt-1 w-full rounded-md border border-line bg-panel px-2 py-1.5 disabled:opacity-50"
             />
           </label>
         </div>
       ))}
-      {message ? <p className="text-sm text-emerald-800">{message}</p> : null}
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {message ? <p className="text-sm text-primary">{message}</p> : null}
+      {error ? <p className="text-sm text-taken">{error}</p> : null}
       <button
         type="submit"
         disabled={save.isPending}
-        className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-60"
+        className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary hover:bg-inverse disabled:opacity-60"
       >
         {save.isPending ? 'Menyimpan...' : 'Simpan jam'}
       </button>

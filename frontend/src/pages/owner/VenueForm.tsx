@@ -58,16 +58,16 @@ export function VenueForm({ initial, pending, error, submitLabel, onSubmit }: Ve
       <FormBanner message={error} />
       <TextField id="name" label="Nama venue" registration={register('name')} error={errors.name?.message} />
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-slate-900">
+        <label htmlFor="description" className="block text-sm font-medium text-ink">
           Deskripsi
         </label>
         <textarea
           id="description"
           rows={4}
-          className="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5 text-base text-slate-900 focus:border-emerald-700"
+          className="mt-1.5 w-full rounded-lg border border-line px-3 py-2.5 text-base text-ink focus:border-primary"
           {...register('description')}
         />
-        {errors.description ? <p className="mt-1.5 text-sm text-red-700">{errors.description.message}</p> : null}
+        {errors.description ? <p className="mt-1.5 text-sm text-taken">{errors.description.message}</p> : null}
       </div>
       <TextField id="address" label="Alamat" registration={register('address')} error={errors.address?.message} />
       <div className="grid gap-5 sm:grid-cols-2">
@@ -83,12 +83,12 @@ export function VenueForm({ initial, pending, error, submitLabel, onSubmit }: Ve
         hint="Contoh 081234567890."
       />
       <div>
-        <label htmlFor="timezone" className="block text-sm font-medium text-slate-900">
+        <label htmlFor="timezone" className="block text-sm font-medium text-ink">
           Zona waktu
         </label>
         <select
           id="timezone"
-          className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-base text-slate-900 focus:border-emerald-700"
+          className="mt-1.5 w-full rounded-md border border-line bg-panel px-3 py-2.5.5 text-base text-ink focus:border-primary"
           {...register('timezone')}
         >
           {timezoneOptions.map((option) => (
@@ -97,13 +97,13 @@ export function VenueForm({ initial, pending, error, submitLabel, onSubmit }: Ve
             </option>
           ))}
         </select>
-        {errors.timezone ? <p className="mt-1.5 text-sm text-red-700">{errors.timezone.message}</p> : null}
+        {errors.timezone ? <p className="mt-1.5 text-sm text-taken">{errors.timezone.message}</p> : null}
       </div>
       <fieldset>
-        <legend className="text-sm font-medium text-slate-900">Fasilitas</legend>
+        <legend className="text-sm font-medium text-ink">Fasilitas</legend>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
           {facilityOptions.map((option) => (
-            <label key={option.value} className="flex items-center gap-2 text-sm text-slate-800">
+            <label key={option.value} className="flex items-center gap-2 text-sm text-ink">
               <input
                 type="checkbox"
                 checked={facilities.includes(option.value)}

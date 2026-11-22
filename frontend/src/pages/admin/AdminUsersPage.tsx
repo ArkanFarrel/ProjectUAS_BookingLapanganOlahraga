@@ -33,39 +33,39 @@ export function AdminUsersPage() {
 
   return (
     <AppShell>
-      <Link to="/admin" className="text-sm font-medium text-emerald-800">
+      <Link to="/admin" className="text-sm font-medium text-primary">
         Kembali ke ringkasan
       </Link>
-      <h1 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900">Pengguna</h1>
-      <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-700">
+      <h1 className="mt-3 page-title">Daftar Pengguna &amp; Venue Owner</h1>
+      <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-soft">
         Menangguhkan pelanggan atau pemilik menutup akses mereka. Admin tidak bisa menangguhkan dirinya atau admin lain.
       </p>
 
       <form
-        className="mt-6 grid gap-3 sm:grid-cols-3"
+        className="surface-card mt-6 grid gap-3 p-5 sm:grid-cols-3"
         onSubmit={(event) => {
           event.preventDefault()
           setSearch(q.trim())
           setPage(1)
         }}
       >
-        <label className="text-sm text-slate-800">
+        <label className="text-sm text-ink">
           Cari nama atau email
           <input
             value={q}
             onChange={(event) => setQ(event.target.value)}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2"
+            className="mt-1 w-full rounded-md border border-line bg-panel px-3 py-2.5"
           />
         </label>
-        <label className="text-sm text-slate-800">
-          Role
+        <label className="text-sm text-ink">
+          Peran
           <select
             value={role}
             onChange={(event) => {
               setRole(event.target.value as UserRole | '')
               setPage(1)
             }}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
+            className="mt-1 w-full rounded-md border border-line bg-panel px-3 py-2.5"
           >
             <option value="">Semua</option>
             <option value="customer">Pelanggan</option>
@@ -73,7 +73,7 @@ export function AdminUsersPage() {
             <option value="admin">Admin</option>
           </select>
         </label>
-        <label className="text-sm text-slate-800">
+        <label className="text-sm text-ink">
           Status
           <select
             value={status}
@@ -81,29 +81,29 @@ export function AdminUsersPage() {
               setStatus(event.target.value as UserStatus | '')
               setPage(1)
             }}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
+            className="mt-1 w-full rounded-md border border-line bg-panel px-3 py-2.5"
           >
             <option value="">Semua</option>
             <option value="active">Aktif</option>
             <option value="suspended">Ditangguhkan</option>
           </select>
         </label>
-        <button type="submit" className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800 sm:col-span-3 sm:w-fit">
+        <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-on-primary hover:bg-inverse sm:col-span-3 sm:w-fit">
           Cari
         </button>
       </form>
 
-      {actionError ? <p className="mt-4 text-sm text-red-800">{actionError}</p> : null}
-      {users.isPending ? <p className="mt-6 text-sm text-slate-700">Memuat pengguna...</p> : null}
-      {users.isError ? <p className="mt-6 text-sm text-red-800">{apiErrorMessage(users.error, 'Pengguna gagal dimuat.')}</p> : null}
-      {users.data && users.data.data.length === 0 ? <p className="mt-6 text-sm text-slate-700">Tidak ada pengguna pada filter ini.</p> : null}
+      {actionError ? <p className="mt-4 text-sm text-taken">{actionError}</p> : null}
+      {users.isPending ? <p className="mt-6 text-sm text-ink-soft">Memuat pengguna...</p> : null}
+      {users.isError ? <p className="mt-6 text-sm text-taken">{apiErrorMessage(users.error, 'Pengguna gagal dimuat.')}</p> : null}
+      {users.data && users.data.data.length === 0 ? <p className="mt-6 text-sm text-ink-soft">Tidak ada pengguna pada filter ini.</p> : null}
 
-      <ul className="mt-6 divide-y divide-slate-200 border-y border-slate-200">
+      <ul className="surface-card mt-6 divide-y divide-line px-5">
         {users.data?.data.map((user) => (
-          <li key={user.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+          <li key={user.id} className="flex flex-wrap items-center justify-between gap-3 py-4">
             <div>
-              <p className="font-medium text-slate-900">{user.name}</p>
-              <p className="text-sm text-slate-700">
+              <p className="font-medium text-ink">{user.name}</p>
+              <p className="text-sm text-ink-soft">
                 {user.email} · {roleLabel(user.role)} · {statusLabel(user.status)}
               </p>
             </div>
@@ -112,7 +112,7 @@ export function AdminUsersPage() {
                 type="button"
                 disabled={change.isPending}
                 onClick={() => change.mutate({ id: user.id, next: 'suspend' })}
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-50 disabled:opacity-60"
+                className="rounded-lg border border-line px-3 py-2 text-sm font-medium text-ink hover:bg-panel disabled:opacity-60"
               >
                 Tangguhkan
               </button>
@@ -121,7 +121,7 @@ export function AdminUsersPage() {
                 type="button"
                 disabled={change.isPending}
                 onClick={() => change.mutate({ id: user.id, next: 'activate' })}
-                className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-60"
+                className="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-on-primary hover:bg-inverse disabled:opacity-60"
               >
                 Aktifkan
               </button>
@@ -132,13 +132,13 @@ export function AdminUsersPage() {
 
       {users.data && users.data.meta.last_page > 1 ? (
         <div className="mt-4 flex items-center gap-3 text-sm">
-          <button type="button" disabled={page <= 1} onClick={() => setPage((current) => current - 1)} className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50">
+          <button type="button" disabled={page <= 1} onClick={() => setPage((current) => current - 1)} className="rounded-lg border border-line px-3 py-2 disabled:opacity-50">
             Sebelumnya
           </button>
-          <span className="text-slate-700">
+          <span className="text-ink-soft">
             Halaman {users.data.meta.current_page} dari {users.data.meta.last_page}
           </span>
-          <button type="button" disabled={page >= users.data.meta.last_page} onClick={() => setPage((current) => current + 1)} className="rounded-lg border border-slate-300 px-3 py-2 disabled:opacity-50">
+          <button type="button" disabled={page >= users.data.meta.last_page} onClick={() => setPage((current) => current + 1)} className="rounded-lg border border-line px-3 py-2 disabled:opacity-50">
             Berikutnya
           </button>
         </div>
