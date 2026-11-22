@@ -4,17 +4,19 @@ import { z } from 'zod'
 export const passwordSchema = z
   .string()
   .min(8, 'Password minimal 8 karakter.')
+  .max(72, 'Password maksimal 72 karakter.')
   .regex(/\p{L}/u, 'Password harus mengandung huruf.')
   .regex(/\p{N}/u, 'Password harus mengandung angka.')
 
 export const loginSchema = z.object({
   email: z.email('Masukkan email yang valid.'),
   password: z.string().min(1, 'Password wajib diisi.'),
+  remember: z.boolean(),
 })
 
 export const registerSchema = z
   .object({
-    name: z.string().trim().min(1, 'Nama wajib diisi.').max(100, 'Nama maksimal 100 karakter.'),
+    name: z.string().trim().min(2, 'Nama minimal 2 karakter.').max(100, 'Nama maksimal 100 karakter.'),
     email: z.email('Masukkan email yang valid.'),
     password: passwordSchema,
     password_confirmation: z.string().min(1, 'Ulangi password.'),
@@ -28,12 +30,12 @@ export const registerSchema = z
   })
 
 export const profileSchema = z.object({
-  name: z.string().trim().min(1, 'Nama wajib diisi.').max(100, 'Nama maksimal 100 karakter.'),
+  name: z.string().trim().min(2, 'Nama minimal 2 karakter.').max(100, 'Nama maksimal 100 karakter.'),
   phone: z
     .string()
     .trim()
     .refine(
-      (value) => value === '' || /^(?:\+62|0)[0-9]{8,15}$/.test(value),
+      (value) => value === '' || /^(?:\+62|0)8[0-9]{7,12}$/.test(value.replace(/[\s-]+/g, '')),
       'Gunakan nomor Indonesia, misalnya 081234567890.',
     ),
 })

@@ -70,7 +70,7 @@ Gambar venue dan lapangan: wajib file, aturan `image`, hanya jpg, jpeg, png, web
 
 ### Mass assignment
 
-`users.role` dan `users.status` ada di `$fillable` supaya factory dan perintah admin bisa mengisi. Register hanya membaca `account_type` yang sudah divalidasi (`customer` atau `owner`). Profil hanya mengisi `name` dan `phone`. Venue mengisi `owner_id` dan `status` di controller, bukan dari body. Harga dan status booking diisi `BookingService`.
+`users.role` dan `users.status` ditetapkan secara eksplisit oleh server. Keduanya tetap di luar daftar atribut yang boleh diisi massal. Register hanya membaca `account_type` yang sudah divalidasi (`customer` atau `owner`). Profil hanya mengisi `name` dan `phone`. Venue mengisi `owner_id` dan `status` di controller, bukan dari body. Harga dan status booking diisi `BookingService`.
 
 ### Rate limit
 
@@ -79,6 +79,7 @@ Gambar venue dan lapangan: wajib file, aturan `image`, hanya jpg, jpeg, png, web
 | `api` | 60 per menit per user atau IP |
 | `login` | 5 per menit per email dan IP |
 | `register` | 5 per menit per IP |
+| `password` | 5 per menit per user |
 | `uploads` | 20 per menit per user atau IP |
 | `booking-create` | 10 per menit per user atau IP |
 
@@ -90,7 +91,6 @@ Pesan login yang gagal sama untuk email yang tidak ada dan password yang salah, 
 
 ## Yang sengaja dibiarkan
 
-- `php artisan app:create-admin --password` masih pilihan terbuka. Jalan normal menanyakan password tanpa menampilkannya. `--password` bisa tersisa di riwayat shell.
 - Password demo `Rahasia12` di `DemoDataSeeder` hanya untuk data lokal. Bukan rahasia production.
 - `DB_PASSWORD` kosong dan user `root` di `.env.example` hanya contoh XAMPP lokal. Production harus memakai akun database sendiri. Itu Phase 9.
 - Konfirmasi booking tidak mengunci ulang baris court. Slot pending sudah menahan jadwal, dan konfirmasi ditolak kalau `expires_at` sudah lewat. Dua booking bersamaan tetap diuji di Phase 6: tepat satu yang berhasil.

@@ -3,107 +3,106 @@
 namespace Tests\Feature\Auth;
 
 use App\Enums\UserRole;
-use App\Enums\UserStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Tests\Concerns\InteractsWithSpa;
-use Tests\TestCase;
 
-class ProfileTest extends TestCase
+class ProfileTest extends StatefulApiTestCase
 {
-    use InteractsWithSpa;
     use RefreshDatabase;
 
-    protected function setUp(): void
+    public function test_guest_cannot_access_me_or_profile(): void
     {
-        parent::setUp();
-        $this->setUpSpa();
+        $this->getJson('/api/v1/auth/me')->assertUnauthorized();
+        $this->putJson('/api/v1/auth/profile', ['name' => 'X'])->assertUnauthorized();
+        $this->putJson('/api/v1/auth/password', [])->assertUnauthorized();
     }
 
-    public function test_user_can_update_name_and_phone_but_not_role(): void
+    public function test_me_returns_current_user_without_sensitive_fields(): void
     {
-        $user = User::factory()->create([
-            'name' => 'Budi',
-            'email' => 'budi@mail.test',
-            'password' => 'Rahasia12',
-            'role' => UserRole::Customer,
-        ]);
+        $user = User::factory()->create();
 
-        $login = $this->postJson('/api/v1/auth/login', [
-            'email' => 'budi@mail.test',
-            'password' => 'Rahasia12',
-        ])->assertOk();
+        $this->actingAs($user, 'web')
+            ->getJson('/api/v1/auth/me')
+            ->assertOk()
+            ->assertJsonPath('data.id', $user->id)
+            ->assertJsonPath('data.role', 'customer')
+            ->assertJsonMissingPath('data.password')
+            ->assertJsonMissingPath('data.remember_token');
+    }
 
-        $this->carryCookies($login);
+    public function test_user_can_update_name_and_phone_only(): void
+    {
+        $user = User::factory()->create(['email' => 'budi@example.com']);
 
-        $this->putJson('/api/v1/auth/profile', [
-            'name' => 'Budi Baru',
-            'phone' => '081234567890',
-            'email' => 'dicuri@mail.test',
-            'role' => 'admin',
-            'status' => 'suspended',
-        ])->assertOk()
+        $this->actingAs($user, 'web')
+            ->putJson('/api/v1/auth/profile', [
+                'name' => 'Budi Baru',
+                'phone' => '0812-3456-7890',
+                'role' => 'admin',
+                'status' => 'suspended',
+                'email' => 'hacker@example.com',
+            ])
+            ->assertOk()
             ->assertJsonPath('data.name', 'Budi Baru')
             ->assertJsonPath('data.phone', '081234567890')
-            ->assertJsonPath('data.email', 'budi@mail.test')
             ->assertJsonPath('data.role', 'customer')
-            ->assertJsonPath('data.status', 'active');
+            ->assertJsonPath('data.email', 'budi@example.com');
 
         $user->refresh();
         $this->assertSame(UserRole::Customer, $user->role);
-        $this->assertSame(UserStatus::Active, $user->status);
-        $this->assertSame('budi@mail.test', $user->email);
+        $this->assertTrue($user->isActive());
+        $this->assertSame('budi@example.com', $user->email);
     }
 
     public function test_invalid_phone_is_rejected(): void
     {
-        User::factory()->create([
-            'email' => 'budi@mail.test',
-            'password' => 'Rahasia12',
-        ]);
+        $user = User::factory()->create();
 
-        $login = $this->postJson('/api/v1/auth/login', [
-            'email' => 'budi@mail.test',
-            'password' => 'Rahasia12',
-        ]);
-
-        $this->carryCookies($login)
-            ->putJson('/api/v1/auth/profile', [
-                'name' => 'Budi',
-                'phone' => 'bukan-nomor',
-            ])->assertUnprocessable()
+        $this->actingAs($user, 'web')
+            ->putJson('/api/v1/auth/profile', ['name' => 'Budi', 'phone' => '12345'])
+            ->assertUnprocessable()
             ->assertJsonValidationErrors('phone');
     }
 
-    public function test_password_change_requires_the_current_password(): void
+    public function test_password_change_requires_current_password(): void
     {
-        $user = User::factory()->create([
-            'email' => 'budi@mail.test',
-            'password' => 'Rahasia12',
-        ]);
+        $user = User::factory()->create();
 
-        $login = $this->postJson('/api/v1/auth/login', [
-            'email' => 'budi@mail.test',
-            'password' => 'Rahasia12',
-        ]);
-
-        $this->carryCookies($login);
-
-        $this->putJson('/api/v1/auth/password', [
-            'current_password' => 'Salah1234',
-            'password' => 'Baru12345',
-            'password_confirmation' => 'Baru12345',
-        ])->assertUnprocessable()
+        $this->actingAs($user, 'web')
+            ->putJson('/api/v1/auth/password', [
+                'current_password' => 'salah123',
+                'password' => 'passwordBaru123',
+                'password_confirmation' => 'passwordBaru123',
+            ])
+            ->assertUnprocessable()
             ->assertJsonValidationErrors('current_password');
 
-        $this->putJson('/api/v1/auth/password', [
-            'current_password' => 'Rahasia12',
-            'password' => 'Baru12345',
-            'password_confirmation' => 'Baru12345',
-        ])->assertOk()
-            ->assertJsonPath('data.email', 'budi@mail.test');
+        $this->assertTrue(Hash::check('password', $user->fresh()->password));
+    }
 
-        $this->assertTrue(Hash::check('Baru12345', $user->refresh()->password));
+    public function test_user_can_change_password(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user, 'web')
+            ->putJson('/api/v1/auth/password', [
+                'current_password' => 'password',
+                'password' => 'passwordBaru123',
+                'password_confirmation' => 'passwordBaru123',
+            ])
+            ->assertNoContent();
+
+        $this->assertTrue(Hash::check('passwordBaru123', $user->fresh()->password));
+    }
+
+    public function test_suspended_user_session_is_rejected(): void
+    {
+        $user = User::factory()->suspended()->create();
+
+        $this->actingAs($user, 'web')
+            ->getJson('/api/v1/auth/me')
+            ->assertForbidden()
+            ->assertJsonPath('code', 'ACCOUNT_SUSPENDED');
     }
 }

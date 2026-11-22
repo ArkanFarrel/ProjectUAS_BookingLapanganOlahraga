@@ -2,14 +2,14 @@
 
 namespace App\Http\Resources;
 
-use App\Enums\UserRole;
-use App\Enums\UserStatus;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * Bentuk user yang boleh dilihat client.
- * Password dan remember_token sengaja tidak ikut.
+ * Public shape of the authenticated user. Never exposes password / remember_token.
+ *
+ * @mixin User
  */
 class UserResource extends JsonResource
 {
@@ -18,17 +18,14 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $role = $this->role instanceof UserRole ? $this->role->value : $this->role;
-        $status = $this->status instanceof UserStatus ? $this->status->value : $this->status;
-
         return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
             'phone' => $this->phone,
-            'role' => $role,
-            'status' => $status,
-            'created_at' => $this->created_at?->utc()->format('Y-m-d\TH:i:s\Z'),
+            'role' => $this->role->value,
+            'status' => $this->status->value,
+            'created_at' => $this->created_at?->toIso8601ZuluString(),
         ];
     }
 }
