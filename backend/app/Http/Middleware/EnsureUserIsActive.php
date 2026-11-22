@@ -2,45 +2,37 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\UserStatus;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-// Session yang sudah terbit harus putus saat admin men-suspend akun.
+/**
+ * Rejects requests from suspended accounts and terminates their session,
+ * so a user suspended by an admin loses access on the very next request.
+ */
 class EnsureUserIsActive
 {
-    /**
-     * @param  Closure(Request): Response  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
 
-        if ($user === null) {
-            return $next($request);
+        if ($user !== null && ! $user->isActive()) {
+            Auth::guard('web')->logout();
+
+            if ($request->hasSession()) {
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            }
+
+            Auth::forgetGuards();
+
+            return response()->json([
+                'message' => 'Akun Anda sedang dinonaktifkan. Hubungi admin SportsCourt.',
+                'code' => 'ACCOUNT_SUSPENDED',
+            ], Response::HTTP_FORBIDDEN);
         }
 
-        $status = $user->status instanceof UserStatus ? $user->status : UserStatus::tryFrom((string) $user->status);
-
-        if ($status === UserStatus::Active) {
-            return $next($request);
-        }
-
-        Auth::guard('web')->logout();
-
-        if ($request->hasSession()) {
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-        }
-
-        // Sama seperti logout: buang guard di memori supaya session baru tidak masih menganggap user lama login.
-        Auth::forgetGuards();
-
-        return response()->json([
-            'message' => 'Akun Anda ditangguhkan. Hubungi admin SportsCourt.',
-            'code' => 'ACCOUNT_SUSPENDED',
-        ], 403);
+        return $next($request);
     }
 }

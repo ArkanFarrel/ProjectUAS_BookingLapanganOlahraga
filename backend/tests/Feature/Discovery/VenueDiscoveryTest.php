@@ -25,7 +25,8 @@ class VenueDiscoveryTest extends TestCase
         $inactive = $this->visibleVenue('GOR Tutup', 'Bandung');
         $inactive->update(['is_active' => false]);
         $suspendedOwner = $this->visibleVenue('GOR Owner', 'Bandung');
-        $suspendedOwner->owner->update(['status' => UserStatus::Suspended]);
+        $suspendedOwner->owner->status = UserStatus::Suspended;
+        $suspendedOwner->owner->save();
 
         $this->getJson('/api/v1/venues')
             ->assertOk()

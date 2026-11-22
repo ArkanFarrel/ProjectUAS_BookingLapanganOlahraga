@@ -7,29 +7,27 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-// Guard UX di frontend tidak cukup. Role dicek lagi di sini.
+/**
+ * Usage: ->middleware('role:owner') or ->middleware('role:owner,admin').
+ * Must run after authentication middleware.
+ */
 class EnsureRole
 {
-    /**
-     * @param  Closure(Request): Response  $next
-     * @param  string  ...$roles  nilai dari middleware, misalnya role:owner
-     */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         $user = $request->user();
 
         if ($user === null) {
-            return response()->json([
-                'message' => 'Unauthenticated.',
-            ], 401);
+            return response()->json(['message' => 'Unauthenticated.'], Response::HTTP_UNAUTHORIZED);
         }
 
-        $role = $user->role instanceof UserRole ? $user->role->value : (string) $user->role;
+        $allowed = array_map(static fn (string $role): UserRole => UserRole::from($role), $roles);
 
-        if (! in_array($role, $roles, true)) {
+        if (! $user->hasRole(...$allowed)) {
             return response()->json([
-                'message' => 'Anda tidak memiliki akses untuk melakukan ini.',
-            ], 403);
+                'message' => 'Anda tidak memiliki akses ke resource ini.',
+                'code' => 'FORBIDDEN_ROLE',
+            ], Response::HTTP_FORBIDDEN);
         }
 
         return $next($request);

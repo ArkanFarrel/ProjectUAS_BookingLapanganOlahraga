@@ -9,7 +9,7 @@ class UpdatePasswordRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user() !== null;
+        return true;
     }
 
     /**
@@ -18,9 +18,8 @@ class UpdatePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // current_password membandingkan dengan hash di database, bukan dengan field lain di body.
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'current_password' => ['required', 'string', 'current_password:web'],
+            'password' => ['required', 'string', 'max:72', 'confirmed', 'different:current_password', Password::min(8)->letters()->numbers()],
         ];
     }
 
