@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { TextField } from '@/components/auth/TextField'
 import { AppShell } from '@/components/layout/AppShell'
 import { applyFieldErrors, apiErrorMessage } from '@/features/auth/formErrors'
-import { useMe, useUpdatePassword, useUpdateProfile } from '@/features/auth/hooks'
+import { useLogout, useMe, useUpdatePassword, useUpdateProfile } from '@/features/auth/hooks'
 import { roleLabel, statusLabel } from '@/features/auth/paths'
 import {
   passwordChangeSchema,
@@ -19,6 +19,7 @@ import { useForm } from 'react-hook-form'
 export function AccountPage() {
   usePageTitle('Pengaturan')
   const me = useMe()
+  const logout = useLogout()
   const updateProfile = useUpdateProfile()
   const updatePassword = useUpdatePassword()
   const [profileMessage, setProfileMessage] = useState<string | null>(null)
@@ -175,6 +176,12 @@ export function AccountPage() {
           {updatePassword.isPending ? 'Menyimpan...' : 'Simpan Kata Sandi'}
         </Button>
       </form>
+      <section className="surface-card mt-6 flex flex-wrap items-center justify-between gap-3 p-5 sm:p-6" aria-label="Sesi akun">
+        <p className="text-ink-soft">Masuk sebagai {me.data.email}</p>
+        <Button tone="line" className="border-taken/25 text-taken hover:bg-taken-soft" onClick={() => logout.mutate()} disabled={logout.isPending}>
+          {logout.isPending ? 'Keluar...' : 'Keluar Akun'}
+        </Button>
+      </section>
     </AppShell>
   )
 }

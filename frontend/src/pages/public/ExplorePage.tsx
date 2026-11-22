@@ -11,7 +11,8 @@ import { cn } from '@/lib/cn'
 import { usePageTitle } from '@/lib/usePageTitle'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowRight, MapPin, Search, SlidersHorizontal } from 'lucide-react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 
 type FilterField = 'q' | 'city' | 'min_price' | 'max_price'
 const searchFields: { name: FilterField; label: string; placeholder?: string }[] = [
@@ -24,6 +25,11 @@ const searchFields: { name: FilterField; label: string; placeholder?: string }[]
 export function ExplorePage() {
   usePageTitle('Jelajah')
   const [params, setParams] = useSearchParams()
+  const { hash } = useLocation()
+
+  useEffect(() => {
+    if (hash === '#pencarian-venue') document.getElementById('pencarian-venue')?.focus()
+  }, [hash])
   const filters: ExploreFilters = {
     q: params.get('q') ?? '',
     city: params.get('city') ?? '',
@@ -71,12 +77,13 @@ export function ExplorePage() {
             <span className="relative block">
               {name === 'q' ? <Search size={17} className="pointer-events-none absolute bottom-3 left-3 text-ink-soft" aria-hidden="true" /> : null}
               <input
+                id={name === 'q' ? 'pencarian-venue' : undefined}
                 name={name}
                 defaultValue={filters[name]}
                 type={name === 'q' ? 'search' : 'text'}
                 inputMode={name === 'min_price' || name === 'max_price' ? 'numeric' : undefined}
                 placeholder={placeholder}
-                className={cn(fieldClass, name === 'q' && 'pl-9')}
+                className={cn(fieldClass, name === 'q' && 'scroll-mt-36 pl-9')}
               />
             </span>
           </label>
