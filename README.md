@@ -78,6 +78,12 @@ Kedua cara menghasilkan data yang sama. Jangan menjalankan `php artisan migrate:
 
 File SQL dibuat di MariaDB 10.11.14 dengan `php artisan migrate:fresh --seed` pada database kosong, lalu `mysqldump`. Langkah lengkap dan cara impor ada di `docs/DEPLOY.md`.
 
+Jalankan API dari folder `backend` dan biarkan terminalnya terbuka.
+
+```sh
+php artisan serve --host=localhost --port=8000
+```
+
 ### 5. Siapkan halaman
 
 Terminal kedua, dari folder proyek:
@@ -124,7 +130,7 @@ cd backend
 php artisan app:create-admin
 ```
 
-Perintah ini menanyakan nama, email, dan password. Password tidak tampil di layar. Opsi `--password` masih pilihan terbuka: itu memudahkan skrip, tetapi password bisa tersisa di riwayat terminal. Untuk dipakai sehari-hari, jalankan perintah tanpa `--password`.
+Perintah ini meminta nama, email, dan konfirmasi password. Password admin minimal 12 karakter dan mengandung huruf besar, huruf kecil, angka, serta simbol. Password dimasukkan lewat prompt tersembunyi.
 
 ## Cek bahwa semuanya sehat
 

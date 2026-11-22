@@ -6,7 +6,7 @@
 -- Import: create an empty database named sportscourt (utf8mb4_unicode_ci), select it, then import this file.
 -- Re-importing drops the tables in that database. Do not import this over a database that has real bookings.
 
-/*M!999999\- enable the sandbox mode */ 
+/*M!999999\- enable the sandbox mode */
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -231,7 +231,7 @@ INSERT INTO `migrations` VALUES
 (1,'0001_01_01_000000_create_users_table',1),
 (2,'0001_01_01_000001_create_cache_table',1),
 (3,'0001_01_01_000002_create_jobs_table',1),
-(4,'2026_11_21_000001_add_auth_columns_to_users_table',1),
+(4,'2026_11_22_000001_add_role_status_phone_to_users_table',1),
 (5,'2026_11_21_100001_create_sports_table',1),
 (6,'2026_11_21_100002_create_venues_table',1),
 (7,'2026_11_21_100003_create_venue_images_table',1),
@@ -350,7 +350,7 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
@@ -442,4 +442,3 @@ INSERT INTO `venues` VALUES
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-

@@ -9,6 +9,7 @@ type UserResponse = {
 export type LoginInput = {
   email: string
   password: string
+  remember?: boolean
 }
 
 export type RegisterInput = LoginInput & {
@@ -38,7 +39,7 @@ export async function fetchMe(): Promise<User | null> {
     const { data } = await api.get<UserResponse>('/api/v1/auth/me')
     return data.data
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 401) {
+    if (axios.isAxiosError<ErrorBody>(error) && (error.response?.status === 401 || error.response?.data?.code === 'ACCOUNT_SUSPENDED')) {
       return null
     }
 
@@ -51,6 +52,7 @@ export async function login(input: LoginInput): Promise<User> {
   const { data } = await api.post<UserResponse>('/api/v1/auth/login', {
     email: input.email.trim().toLowerCase(),
     password: input.password,
+    remember: input.remember ?? false,
   })
   return data.data
 }
@@ -81,10 +83,9 @@ export async function updateProfile(input: ProfileInput): Promise<User> {
   return data.data
 }
 
-export async function updatePassword(input: PasswordInput): Promise<User> {
+export async function updatePassword(input: PasswordInput): Promise<void> {
   await ensureCsrfCookie()
-  const { data } = await api.put<UserResponse>('/api/v1/auth/password', input)
-  return data.data
+  await api.put('/api/v1/auth/password', input)
 }
 
 type ErrorBody = {

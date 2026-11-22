@@ -42,7 +42,7 @@ export function LoginPage() {
     formState: { errors },
   } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: '', password: '', remember: false },
   })
 
   async function onSubmit(values: LoginValues) {
@@ -97,6 +97,11 @@ export function LoginPage() {
             {showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
           </button>
         </div>
+
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" {...register('remember')} />
+          Ingat saya
+        </label>
 
         <SubmitButton
           pending={login.isPending}

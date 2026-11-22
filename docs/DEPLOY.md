@@ -26,7 +26,7 @@ Frontend production memakai `frontend/.env.production.example` sebagai contoh `V
 5. Kalau server ini butuh data demo, impor `backend/database/export/sportscourt.sql` ke database kosong itu, lalu jangan menjalankan `migrate:fresh`.
 6. Di `frontend/`: `npm install`, atur `VITE_API_URL`, lalu `npm run build`. Sajikan isi folder `frontend/dist` sebagai situs statis.
 7. Tambahkan cron setiap menit: `php /path/ke/backend/artisan schedule:run`. Tanpa ini, booking pending tidak otomatis menjadi kedaluwarsa dan booking selesai tidak otomatis tertutup. Slot yang sudah lewat `expires_at` tetap tidak bisa ditumpuki, karena pengecekan booking melihat jam itu langsung.
-8. Buat admin di server dengan `php artisan app:create-admin`. Perintah itu menanyakan password tanpa menampilkannya. Opsi `--password` masih pilihan terbuka, karena password bisa tersisa di riwayat terminal.
+8. Buat admin di server dengan `php artisan app:create-admin`. Masukkan password melalui prompt tersembunyi. Password admin minimal 12 karakter dan mengandung huruf besar, huruf kecil, angka, serta simbol.
 
 ## Cadangan
 

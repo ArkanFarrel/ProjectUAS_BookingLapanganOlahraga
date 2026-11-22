@@ -42,6 +42,7 @@ export function useLogout() {
   return useMutation({
     mutationFn: logout,
     onSettled: () => {
+      queryClient.clear()
       queryClient.setQueryData(authKeys.me, null)
     },
   })
@@ -57,10 +58,5 @@ export function useUpdateProfile() {
 }
 
 export function useUpdatePassword() {
-  return useMutation({
-    mutationFn: updatePassword,
-    onSuccess: (user) => {
-      queryClient.setQueryData(authKeys.me, user)
-    },
-  })
+  return useMutation({ mutationFn: updatePassword })
 }

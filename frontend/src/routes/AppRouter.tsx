@@ -24,7 +24,7 @@ import { NotFoundPage } from '@/pages/public/NotFoundPage'
 import { VenuePublicPage } from '@/pages/public/VenuePublicPage'
 import { GuestOnly, RequireAuth, RequireRole } from '@/routes/guards'
 import { useEffect } from 'react'
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 
 function AuthEvents() {
   const navigate = useNavigate()
@@ -44,6 +44,8 @@ export function AppRouter() {
       <AuthEvents />
       <Routes>
         <Route path="/" element={<ExplorePage />} />
+        <Route path="/dashboard" element={<Navigate to="/customer" replace />} />
+        <Route path="/profile" element={<Navigate to="/account" replace />} />
         <Route path="/explore" element={<ExplorePage />} />
         <Route path="/venues/:venueId" element={<VenuePublicPage />} />
         <Route
